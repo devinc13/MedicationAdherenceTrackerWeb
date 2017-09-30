@@ -32,11 +32,11 @@ import {
 import {
   // Import methods that your schema can use to interact with your database
   User,
-  Widget,
+  Medication,
   getUser,
   getViewer,
-  getWidget,
-  getWidgets,
+  getMedication,
+  getMedications,
 } from './database';
 
 /**
@@ -50,8 +50,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
     var {type, id} = fromGlobalId(globalId);
     if (type === 'User') {
       return getUser(id);
-    } else if (type === 'Widget') {
-      return getWidget(id);
+    } else if (type === 'Medication') {
+      return getMedication(id);
     } else {
       return null;
     }
@@ -59,51 +59,66 @@ var {nodeInterface, nodeField} = nodeDefinitions(
   (obj) => {
     if (obj instanceof User) {
       return userType;
-    } else if (obj instanceof Widget)  {
-      return widgetType;
+    } else if (obj instanceof Medication)  {
+      return medicationType;
     } else {
       return null;
     }
   }
 );
 
-/**
- * Define your own types here
- */
 
 var userType = new GraphQLObjectType({
   name: 'User',
-  description: 'A person who uses our app',
+  description: 'A patient',
   fields: () => ({
     id: globalIdField('User'),
-    widgets: {
-      type: widgetConnection,
-      description: 'A person\'s collection of widgets',
+    name : {
+      type: GraphQLString,
+      description: 'User\'s name',
+    },
+    medications: {
+      type: medicationConnection,
+      description: 'A person\'s collection of medications',
       args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getWidgets(), args),
+      resolve: (_, args) => connectionFromArray(getMedications(), args),
     },
   }),
   interfaces: [nodeInterface],
 });
 
-var widgetType = new GraphQLObjectType({
-  name: 'Widget',
-  description: 'A shiny widget',
+var medicationType = new GraphQLObjectType({
+  name: 'Medication',
+  description: 'A patient\'s medication',
   fields: () => ({
-    id: globalIdField('Widget'),
+    id: globalIdField('Medication'),
     name: {
       type: GraphQLString,
-      description: 'The name of the widget',
+      description: 'The name of the medication',
+    },
+    start: {
+      type: GraphQLString,
+      description: 'Medication start date',
+    },
+    end: {
+      type: GraphQLString,
+      description: 'Medication end date',
+    },
+    repeating: {
+      type: GraphQLString,
+      description: 'If the medication is to be taken daily, weekly, etc.',
+    },
+    notes: {
+      type: GraphQLString,
+      description: 'Any notes about the medication',
     },
   }),
   interfaces: [nodeInterface],
 });
 
-/**
- * Define your own connection types here
- */
-var {connectionType: widgetConnection} =
-  connectionDefinitions({name: 'Widget', nodeType: widgetType});
+
+var {connectionType: medicationConnection} =
+  connectionDefinitions({name: 'Medication', nodeType: medicationType});
 
 /**
  * This is the type that will be the root of our query,
@@ -114,9 +129,9 @@ var queryType = new GraphQLObjectType({
   fields: () => ({
     node: nodeField,
     // Add your own root fields here
-    viewer: {
+    user: {
       type: userType,
-      resolve: () => getViewer(),
+      resolve: () => getUser(),
     },
   }),
 });

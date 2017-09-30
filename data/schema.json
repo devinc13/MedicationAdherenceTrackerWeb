@@ -40,7 +40,7 @@
               "deprecationReason": null
             },
             {
-              "name": "viewer",
+              "name": "user",
               "description": null,
               "args": [],
               "type": {
@@ -100,7 +100,7 @@
             },
             {
               "kind": "OBJECT",
-              "name": "Widget",
+              "name": "Medication",
               "ofType": null
             }
           ]
@@ -108,7 +108,7 @@
         {
           "kind": "OBJECT",
           "name": "User",
-          "description": "A person who uses our app",
+          "description": "A patient",
           "fields": [
             {
               "name": "id",
@@ -127,8 +127,20 @@
               "deprecationReason": null
             },
             {
-              "name": "widgets",
-              "description": "A person's collection of widgets",
+              "name": "name",
+              "description": "User's name",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "medications",
+              "description": "A person's collection of medications",
               "args": [
                 {
                   "name": "after",
@@ -173,7 +185,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "WidgetConnection",
+                "name": "MedicationConnection",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -213,7 +225,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "WidgetConnection",
+          "name": "MedicationConnection",
           "description": "A connection to a list of items.",
           "fields": [
             {
@@ -241,7 +253,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "WidgetEdge",
+                  "name": "MedicationEdge",
                   "ofType": null
                 }
               },
@@ -333,7 +345,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "WidgetEdge",
+          "name": "MedicationEdge",
           "description": "An edge in a connection.",
           "fields": [
             {
@@ -342,7 +354,7 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Widget",
+                "name": "Medication",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -372,8 +384,8 @@
         },
         {
           "kind": "OBJECT",
-          "name": "Widget",
-          "description": "A shiny widget",
+          "name": "Medication",
+          "description": "A patient's medication",
           "fields": [
             {
               "name": "id",
@@ -393,7 +405,55 @@
             },
             {
               "name": "name",
-              "description": "The name of the widget",
+              "description": "The name of the medication",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "start",
+              "description": "Medication start date",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "end",
+              "description": "Medication end date",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "repeating",
+              "description": "If the medication is to be taken daily, weekly, etc.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "notes",
+              "description": "Any notes about the medication",
               "args": [],
               "type": {
                 "kind": "SCALAR",

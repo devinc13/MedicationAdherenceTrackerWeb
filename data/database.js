@@ -1,33 +1,28 @@
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-
 // Model types
 class User {}
-class Widget {}
+class Medication {}
 
-// Mock data
-var viewer = new User();
-viewer.id = '1';
-viewer.name = 'Anonymous';
-var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
-  var widget = new Widget();
-  widget.name = name;
-  widget.id = `${i}`;
-  return widget;
+// Mock data - TODO: hook this up to DB
+var user = new User();
+user.id = '1';
+user.name = 'Anonymous';
+var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
+  var medication = new Medication();
+  medication.name = name;
+  medication.start = 1506726000000;
+  medication.end = 1516726000000;
+  medication.repeating = "daily";
+  medication.notes = "Take with food.";
+  medication.id = `${i}`;
+  return medication;
 });
 
 module.exports = {
   // Export methods that your schema can use to interact with your database
-  getUser: (id) => id === viewer.id ? viewer : null,
-  getViewer: () => viewer,
-  getWidget: (id) => widgets.find(w => w.id === id),
-  getWidgets: () => widgets,
+//  getUser: (id) => id === user.id ? user : null,
+  getUser: () => user,
+  getMedication: (id) => medications.find(w => w.id === id),
+  getMedications: () => medications,
   User,
-  Widget,
+  Medication,
 };
