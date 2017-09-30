@@ -16,7 +16,7 @@ const config = {
         loader: 'babel-loader',
         test: /\.js$/
       }
-    ]
+    ],
   },
   output: {
     filename: 'app.js',

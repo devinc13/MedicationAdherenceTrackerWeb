@@ -1,17 +1,28 @@
 import React from 'react';
 import Relay from 'react-relay';
+import styled from 'styled-components';
+import Button from 'react-bootstrap/lib/Button';
+
+const MedicationsDiv = styled.div`
+  height: 450px;
+`;
+
+const bottomButtonStyle = {};
 
 class MedicationList extends React.Component {
  render() {
     return (
-      <div>
-        <h1>Medication list</h1>
-        <ul>
-          {this.props.user.medications.edges.map(edge =>
-            <li key={edge.node.id}>{edge.node.name} (Start: {edge.node.start}) (End: {edge.node.end}) (Repeating: {edge.node.repeating}) (Notes: {edge.node.notes})</li>
-          )}
-        </ul>
-      </div>
+    	<div>
+	      <MedicationsDiv>
+	        <ul>
+	          {this.props.user.medications.edges.map(edge =>
+	            <li key={edge.node.id}>{edge.node.name} (Start: {edge.node.start}) (End: {edge.node.end}) (Repeating: {edge.node.repeating}) (Notes: {edge.node.notes})</li>
+	          )}
+	        </ul>
+		  </MedicationsDiv>
+
+		  <Button bsStyle="primary" bsSize="large" block>Add new medication</Button>  
+		</div>
     );
   }
 }
