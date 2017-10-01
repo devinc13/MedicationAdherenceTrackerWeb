@@ -3,9 +3,7 @@ import Relay from 'react-relay';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/lib/Button';
 
-const MedicationsDiv = styled.div`
-  height: 450px;
-`;
+import * as Styled from './componentStyles/MedicationListStyles';
 
 const bottomButtonStyle = {};
 
@@ -13,13 +11,13 @@ class MedicationList extends React.Component {
  render() {
     return (
     	<div>
-	      <MedicationsDiv>
+	      <Styled.MedicationsDiv>
 	        <ul>
 	          {this.props.user.medications.edges.map(edge =>
 	            <li key={edge.node.id}>{edge.node.name} (Start: {edge.node.start}) (End: {edge.node.end}) (Repeating: {edge.node.repeating}) (Notes: {edge.node.notes})</li>
 	          )}
 	        </ul>
-		  </MedicationsDiv>
+		  </Styled.MedicationsDiv>
 
 		  <Button bsStyle="primary" bsSize="large" block>Add new medication</Button>  
 		</div>

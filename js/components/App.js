@@ -2,51 +2,36 @@ import React from 'react';
 import Relay from 'react-relay';
 
 import MedicationList from './MedicationList';
+import Graph from './Graph';
 import Panel from 'react-bootstrap/lib/Panel';
-import styled from 'styled-components';
+import * as Styled from './componentStyles/AppStyles';
 
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
-
-const SpacedDiv = styled.div`
-  margin: 10px;
-  display: inline-block;
-  width: 45%;
-  vertical-align: top;
-  height: 100%;
-`;
-
-const HeightDiv = styled.div`
-  height: 500px;
-`;
 
 class App extends React.Component {
   render() {
     var user = this.props.user;
     return (
       <div>
-        <Header>
+        <Styled.Header>
         <h1>Medication Adherence Tracker</h1>
         Welcome {this.props.user.name}
-        </Header>
+        </Styled.Header>
 
-        <SpacedDiv>
+        <Styled.SpacedDiv>
           <Panel header={'Adherence:'} bsStyle="primary">
-            <HeightDiv>
-              TODO
-            </HeightDiv>
+            <Styled.HeightDiv>
+              <Graph user={user} />
+            </Styled.HeightDiv>
           </Panel>
-        </SpacedDiv>
+        </Styled.SpacedDiv>
 
-        <SpacedDiv>
+        <Styled.SpacedDiv>
           <Panel header={'Medications:'} bsStyle="primary">
-            <HeightDiv>
+            <Styled.HeightDiv>
               <MedicationList user={user} />
-            </HeightDiv>
+            </Styled.HeightDiv>
           </Panel>
-        </SpacedDiv>
+        </Styled.SpacedDiv>
       </div>
     );
   }
@@ -58,6 +43,7 @@ export default Relay.createContainer(App, {
       fragment on User {
         name,
         ${MedicationList.getFragment('user')},
+        ${Graph.getFragment('user')},
       }
     `,
   },
