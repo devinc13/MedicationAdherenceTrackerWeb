@@ -10,8 +10,11 @@ npm install
 ```
 
 Install postgres.
+
 Create a user, and create the `PG_USERNAME` and `PG_PASSWORD` environment variables that match.
+
 Create a database called medicationTracker.
+
 Run migrations by typing `db-migrate up`.
 
 ## Running
@@ -36,5 +39,7 @@ npm start
 ```
 
 To create a db migration run `db-migrate create migrationname` to create a blank migration called migrationname.
+
 Write you migration using [do-migrate SQP API](https://db-migrate.readthedocs.io/en/latest/API/SQL/).
+
 Run `db-migrate up` to run the migration.
