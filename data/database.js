@@ -5,7 +5,7 @@ class Medication {}
 // Mock data - TODO: hook this up to DB
 var user = new User();
 user.id = '1';
-user.name = 'Anonymous';
+user.name = 'Anonymous1';
 var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
   var medication = new Medication();
   medication.name = name;
@@ -17,10 +17,14 @@ var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
   return medication;
 });
 
+var getUser = function() {
+  return user;
+}
+
 module.exports = {
   // Export methods that your schema can use to interact with your database
 //  getUser: (id) => id === user.id ? user : null,
-  getUser: () => user,
+  getUser: getUser,
   getMedication: (id) => medications.find(w => w.id === id),
   getMedications: () => medications,
   User,
