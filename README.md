@@ -11,9 +11,7 @@ npm install
 
 Install postgres.
 
-Create a user, and create the `PG_USERNAME` and `PG_PASSWORD` environment variables that match.
-
-Create a database called medicationTracker.
+Create a user, a database, and create the `PGUSER`, `PGPASSWORD`, `PGHOST` and `PGDATABASE` environment variables for the username, password, host and database name.
 
 Run migrations by typing `db-migrate up`.
 

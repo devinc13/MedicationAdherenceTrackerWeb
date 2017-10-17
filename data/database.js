@@ -1,13 +1,9 @@
-// Model types
-class User {}
-class Medication {}
+const { Pool, Client } = require('pg');
+const pool = new Pool();
 
 // Mock data - TODO: hook this up to DB
-var user = new User();
-user.id = '1';
-user.name = 'Anonymous1';
 var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
-  var medication = new Medication();
+  var medication = {};
   medication.name = name;
   medication.start = 1506726000000;
   medication.end = 1516726000000;
@@ -18,8 +14,12 @@ var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
 });
 
 var getUser = function() {
-  return user;
+  return pool.query('SELECT * FROM users WHERE id = $1', [1]).then(res => res.rows[0]);
 }
+
+// var getMedication = function() {
+//   return null;
+// }
 
 module.exports = {
   // Export methods that your schema can use to interact with your database
@@ -27,6 +27,4 @@ module.exports = {
   getUser: getUser,
   getMedication: (id) => medications.find(w => w.id === id),
   getMedications: () => medications,
-  User,
-  Medication,
 };

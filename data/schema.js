@@ -31,10 +31,7 @@ import {
 
 import {
   // Import methods that your schema can use to interact with your database
-  User,
-  Medication,
   getUser,
-  getViewer,
   getMedication,
   getMedications,
 } from './database';
@@ -57,9 +54,9 @@ var {nodeInterface, nodeField} = nodeDefinitions(
     }
   },
   (obj) => {
-    if (obj instanceof User) {
+    if (obj.__type === 'user') {
       return userType;
-    } else if (obj instanceof Medication)  {
+    } else if (obj.__type === 'medication')  {
       return medicationType;
     } else {
       return null;
@@ -73,9 +70,13 @@ var userType = new GraphQLObjectType({
   description: 'A patient',
   fields: () => ({
     id: globalIdField('User'),
-    name : {
+    first_name : {
       type: GraphQLString,
-      description: 'User\'s name',
+      description: 'User\'s first name',
+    },
+    last_name : {
+      type: GraphQLString,
+      description: 'User\'s last name',
     },
     medications: {
       type: medicationConnection,

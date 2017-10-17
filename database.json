@@ -1,9 +1,9 @@
 {
   "dev": {
     "driver": "pg",
-    "user": {"ENV": "PG_USERNAME"},
-    "password": {"ENV": "PG_PASSWORD"},
-    "host": "localhost",
-    "database": "medicationTracker"
+    "user": {"ENV": "PGUSER"},
+    "password": {"ENV": "PGPASSWORD"},
+    "host": {"ENV": "PGHOST"},
+    "database": {"ENV": "PGDATABASE"}
   }
 }

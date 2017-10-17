@@ -14,7 +14,7 @@ class App extends React.Component {
       <div>
         <Styled.Header>
         <h1>Medication Adherence Tracker</h1>
-        Welcome {this.props.user.name}
+        Welcome {this.props.user.first_name} {this.props.user.last_name}
         </Styled.Header>
 
         <Styled.SpacedDiv>
@@ -41,7 +41,8 @@ export default Relay.createContainer(App, {
   fragments: {
     user: () => Relay.QL`
       fragment on User {
-        name,
+        first_name,
+        last_name,
         ${MedicationList.getFragment('user')},
         ${Graph.getFragment('user')},
       }
