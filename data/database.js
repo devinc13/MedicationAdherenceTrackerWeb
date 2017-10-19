@@ -13,8 +13,8 @@ var medications = ['Medication 1', 'Medication 2'].map((name, i) => {
   return medication;
 });
 
-var getUser = function() {
-  return pool.query('SELECT * FROM users WHERE id = $1', [1]).then(res => res.rows[0]);
+var getUser = function(email) {
+  return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => res.rows[0]);
 }
 
 // var getMedication = function() {

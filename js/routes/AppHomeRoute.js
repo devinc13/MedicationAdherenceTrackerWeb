@@ -4,7 +4,7 @@ export default class extends Relay.Route {
   static queries = {
     user: () => Relay.QL`
       query {
-        user
+        user (email: "test@gmail.com")
       }
     `,
   };

@@ -132,7 +132,12 @@ var queryType = new GraphQLObjectType({
     // Add your own root fields here
     user: {
       type: userType,
-      resolve: () => getUser(),
+      args: {
+        email: {
+          type: GraphQLString
+        }
+      },
+      resolve: (root, {email}) => getUser(email),
     },
   }),
 });
