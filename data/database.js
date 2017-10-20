@@ -5,8 +5,8 @@ var getUser = function(email) {
   return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => res.rows[0]);
 }
 
-var getMedications = function() {
-  return pool.query('SELECT * FROM medications').then(res => res.rows);
+var getMedications = function(id) {
+  return pool.query('SELECT * FROM medications WHERE userid = $1', [id]).then(res => res.rows);
 }
 
 var getMedication = function(id) {

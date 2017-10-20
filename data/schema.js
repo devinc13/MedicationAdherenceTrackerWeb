@@ -82,7 +82,7 @@ var userType = new GraphQLObjectType({
       type: medicationConnection,
       description: 'A person\'s collection of medications',
       args: connectionArgs,
-      resolve: (_, args) => getMedications().then(arr => connectionFromArray(arr, args)),
+      resolve: (user, args) => getMedications(user.id).then(arr => connectionFromArray(arr, args)),
     },
   }),
   interfaces: [nodeInterface],
