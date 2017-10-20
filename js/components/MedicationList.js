@@ -34,7 +34,6 @@ export default Relay.createContainer(MedicationList, {
           edges {
             node {
               id,
-              name,
               start,
               end,
               repeating,
