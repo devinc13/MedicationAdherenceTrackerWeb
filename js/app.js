@@ -1,16 +1,24 @@
 import 'babel-polyfill';
 
 import App from './components/App';
-import AppHomeRoute from './routes/AppHomeRoute';
+import routes from './routes';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Relay from 'react-relay';
+import Router from 'react-router/lib/Router';
+import Relay from 'react-relay/classic';
+import useRelay from 'react-router-relay';
+import applyRouterMiddleware from 'react-router/lib/applyRouterMiddleware';
+import useRouterHistory from 'react-router/lib/useRouterHistory';
+import createHashHistory from 'history/lib/createHashHistory';
+
+const history = useRouterHistory(createHashHistory)({ queryKey: false });
 
 ReactDOM.render(
-  <Relay.Renderer
+  <Router
+    history={history}
+    routes={routes}
+    render={applyRouterMiddleware(useRelay)}
     environment={Relay.Store}
-    Container={App}
-    queryConfig={new AppHomeRoute()}
   />,
   document.getElementById('root')
 );
