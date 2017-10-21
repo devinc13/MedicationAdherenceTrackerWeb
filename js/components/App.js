@@ -5,6 +5,7 @@ import MedicationList from './MedicationList';
 import Graph from './Graph';
 import Panel from 'react-bootstrap/lib/Panel';
 import styled from 'styled-components';
+import Link from 'react-router/lib/Link';
 
 // Styles for this component
 const Header = styled.div`
@@ -30,8 +31,11 @@ class App extends React.Component {
     return (
       <div>
         <Header>
-        <h1>Medication Adherence Tracker</h1>
-        Welcome {this.props.user.first_name} {this.props.user.last_name}
+          <h1>Medication Adherence Tracker</h1>
+          Welcome {this.props.user.first_name} {this.props.user.last_name}
+          <br />
+          <Link to="/login">Sign out</Link>
+
         </Header>
 
         <SpacedDiv>
