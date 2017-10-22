@@ -30,11 +30,12 @@ import {
 } from 'graphql-relay';
 
 import {
-  // Import methods that your schema can use to interact with your database
   getUser,
   getMedication,
   getMedications,
+  loginUser,
 } from './database';
+
 
 /**
  * We get the node interface and field from the Relay library.
@@ -142,6 +143,33 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
+const LoginMutation = mutationWithClientMutationId({
+  name: 'Login',
+  inputFields: {
+    email: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    password: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+  outputFields: {
+    email: {
+      type: GraphQLString,
+    },
+  },
+  mutateAndGetPayload: ({ email, password }) => {
+    const user = db.getUserWithCredentials(email, password)
+
+    if (user) {
+      // TODO: Add in token stuff
+      return user.email;
+    }
+
+    return null;
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -149,7 +177,7 @@ var queryType = new GraphQLObjectType({
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    // Add your own mutations here
+    login: LoginMutation
   })
 });
 
@@ -159,6 +187,5 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });
