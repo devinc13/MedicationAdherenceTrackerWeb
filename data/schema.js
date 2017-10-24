@@ -31,9 +31,11 @@ import {
 
 import {
   // Import methods that your schema can use to interact with your database
-  getUser,
+  getUserById,
+  getUserByEmail,
   getMedication,
   getMedications,
+  addMedication,
 } from './database';
 
 /**
@@ -46,7 +48,7 @@ var {nodeInterface, nodeField} = nodeDefinitions(
   (globalId) => {
     var {type, id} = fromGlobalId(globalId);
     if (type === 'User') {
-      return getUser(id);
+      return getUserById(id);
     } else if (type === 'Medication') {
       return getMedication(id);
     } else {
@@ -137,9 +139,31 @@ var queryType = new GraphQLObjectType({
           type: GraphQLString
         }
       },
-      resolve: (root, {email}) => getUser(email),
+      resolve: (root, {email}) => getUserByEmail(email),
     },
   }),
+});
+
+var AddMedicationMutation = mutationWithClientMutationId({
+  name: 'AddMedication',
+  inputFields: {
+    userId: { type: new GraphQLNonNull(GraphQLID) },
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    start: { type: new GraphQLNonNull(GraphQLString) },
+    end: { type: new GraphQLNonNull(GraphQLString) },
+    repeating: { type: new GraphQLNonNull(GraphQLString) },
+    notes: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: ({userId}) => getUserById(userId),
+    },
+  },
+  mutateAndGetPayload: ({userId, name, start, end, repeating, notes}) => {
+    addMedication(userId, name, start, end, repeating, notes);
+    return {userId};
+  },
 });
 
 /**
@@ -149,7 +173,7 @@ var queryType = new GraphQLObjectType({
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    // Add your own mutations here
+    addMedication: AddMedicationMutation,
   })
 });
 
@@ -159,6 +183,5 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });
