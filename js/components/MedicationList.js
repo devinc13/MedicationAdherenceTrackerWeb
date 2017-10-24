@@ -4,13 +4,29 @@ import styled from 'styled-components';
 import Button from 'react-bootstrap/lib/Button';
 import Link from 'react-router/lib/Link';
 
+import AddMedicationMutation from '../mutations/AddMedicationMutation';
+
 // Styles for this component
 const MedicationsDiv = styled.div`
   height: 450px;
 `;
 
 class MedicationList extends React.Component {
- render() {
+  
+  _handleAddMedication() {
+    this.props.relay.commitUpdate(
+      new AddMedicationMutation({
+        userId: 1,
+        name: "MutationMedication",
+        start: "2017-10-16 07:00:00",
+        end: "2018-10-16 07:00:00",
+        repeating: "weekly",
+        notes: "Take daily.",
+      })
+    );
+  }
+
+  render() {
     return (
     	<div>
 	      <MedicationsDiv>
@@ -24,7 +40,7 @@ class MedicationList extends React.Component {
 	        </ul>
 		  </MedicationsDiv>
 
-		  <Button href="#/addMedication" bsStyle="primary" bsSize="large" block>Add new medication</Button>  
+		  <Button onClick={this._handleAddMedication.bind(this)} bsStyle="primary" bsSize="large" block>Add new medication</Button>  
 		</div>
     );
   }
