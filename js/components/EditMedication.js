@@ -11,7 +11,8 @@ import {
   } from 'react-bootstrap/lib/';
 
 import AddMedicationMutation from '../mutations/AddMedicationMutation';
-
+import EditMedicationMutation from '../mutations/EditMedicationMutation';
+var dateFormat = require('dateformat');
 
 // Styles for this component
 const Header = styled.div`
@@ -28,11 +29,12 @@ class EditMedication extends React.Component {
   constructor() {
     super();
     this.state = {
+      id: "",
       userId: "",
       name: "",
       start: "",
       end: "",
-      repeats: "",
+      repeating: "",
       notes: "",
     };
   }
@@ -40,18 +42,28 @@ class EditMedication extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
+    let medicationId = this.props.id;
     this.state.userId = this.props.user.id;
 
+    let mutation;
+    let failureMessage = "";
+
+    if (medicationId == "null") {
+      failureMessage = "Error adding medication";
+      mutation = new AddMedicationMutation(this.state);
+    } else {
+      failureMessage = "Error editing medication"
+      mutation = new EditMedicationMutation(this.state);;
+    }
+    
     const onSuccess = (response) => {
       window.location.href = "/";
     };
 
     const onFailure = (transaction) => {
-      console.log(transaction.getError());
-      window.alert("Error adding medication.");
+      console.log(transaction.getError().source);
+      window.alert(failureMessage);
     };
-
-    const mutation = new AddMedicationMutation(this.state);
 
     this.props.relay.commitUpdate(
       mutation, {onFailure, onSuccess}
@@ -74,6 +86,24 @@ class EditMedication extends React.Component {
     );
   }
 
+  componentDidMount() {
+    let medicationId = this.props.id;
+    if (medicationId != "null") {
+      var medication = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id).node;
+      let start = new Date(Date.parse(medication.start));
+      let end = new Date(Date.parse(medication.end));
+
+      let newState = {};
+      newState["id"] = medicationId;
+      newState["name"] = medication.name;
+      newState["start"] = dateFormat(start, "yyyy-m-d hh:MM:ss");
+      newState["end"] = dateFormat(end, "yyyy-m-d hh:MM:ss");
+      newState["repeating"] = medication.repeating;
+      newState["notes"] = medication.notes;
+      this.setState(newState);
+    }
+  }
+
   render() {
     return (
       <div>
@@ -83,7 +113,7 @@ class EditMedication extends React.Component {
         <SpacingDiv>
           <form onSubmit={this.handleSubmit.bind(this)}>
             <this.FieldGroup
-              id="formControlsText"
+              id="formControlsName"
               type="text"
               label="Name"
               placeholder="Enter medication name"
@@ -91,7 +121,7 @@ class EditMedication extends React.Component {
               onChange={this.handleChange.bind(this, 'name')}
             />
             <this.FieldGroup
-              id="formControlsText"
+              id="formControlsStart"
               type="text"
               label="Start"
               placeholder="Enter medication start time and date (eg. 2017-10-16 07:00:00)"
@@ -99,7 +129,7 @@ class EditMedication extends React.Component {
               onChange={this.handleChange.bind(this, 'start')}
             />
             <this.FieldGroup
-              id="formControlsText"
+              id="formControlsEnd"
               type="text"
               label="End"
               placeholder="Enter medication end time and date (eg. 2017-10-16 07:00:00)"
@@ -107,7 +137,7 @@ class EditMedication extends React.Component {
               onChange={this.handleChange.bind(this, 'end')}
             />
             <this.FieldGroup
-              id="formControlsText"
+              id="formControlsRepeating"
               type="text"
               label="Repeating"
               placeholder="Select repeating pattern"
@@ -115,7 +145,7 @@ class EditMedication extends React.Component {
               onChange={this.handleChange.bind(this, 'repeating')}
             />
             <this.FieldGroup
-              id="formControlsText"
+              id="formControlsNotes"
               type="text"
               label="Notes"
               placeholder="Enter any additional notes"

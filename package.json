@@ -18,6 +18,7 @@
     "babel-relay-plugin": "0.9.3",
     "chokidar": "1.6.0",
     "classnames": "2.2.5",
+    "dateformat": "3.0.2",
     "express": "4.14.0",
     "express-graphql": "0.5.4",
     "graphql": "0.7.0",
