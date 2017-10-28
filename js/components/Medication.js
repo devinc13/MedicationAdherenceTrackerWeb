@@ -35,7 +35,7 @@ export default Relay.createContainer(Medication, {
   fragments: {
     user: () => Relay.QL`
       fragment on User {
-        medications(first: 10) {
+        medications(first: 20) {
           edges {
             node {
               id,

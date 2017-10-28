@@ -18,7 +18,7 @@ var getMedication = function(id) {
 }
 
 var addMedication = function(userId, name, start, end, repeating, notes) {
-  return pool.query('INSERT INTO medications ("start", "end", "repeating", "notes", "userid", "name") VALUES ($1, $2, $3, $4, $5, $6)', [start, end, repeating, notes, userId, name]);
+  return pool.query('INSERT INTO medications ("start", "end", "repeating", "notes", "userid", "name") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [start, end, repeating, notes, userId, name]).then(res => res.rows[0]);
 }
 
 module.exports = {

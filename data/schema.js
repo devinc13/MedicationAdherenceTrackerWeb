@@ -27,6 +27,7 @@ import {
   globalIdField,
   mutationWithClientMutationId,
   nodeDefinitions,
+  offsetToCursor,
 } from 'graphql-relay';
 
 import {
@@ -120,7 +121,7 @@ var medicationType = new GraphQLObjectType({
 });
 
 
-var {connectionType: medicationConnection} =
+var {connectionType: medicationConnection, edgeType: medicationEdge} =
   connectionDefinitions({name: 'Medication', nodeType: medicationType});
 
 /**
@@ -144,6 +145,8 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
+
+
 var AddMedicationMutation = mutationWithClientMutationId({
   name: 'AddMedication',
   inputFields: {
@@ -157,12 +160,24 @@ var AddMedicationMutation = mutationWithClientMutationId({
   outputFields: {
     user: {
       type: userType,
-      resolve: ({userId}) => getUserById(userId),
+      resolve: medication => getUserById(medication.userid),
     },
+    medicationEdge: {
+      type: medicationEdge,
+      resolve: medication => {
+        return getMedications(medication.userId).then(medications => {
+          const offset = medications.indexOf(medications.find(m => m.id === medication.id));
+          return {
+            cursor: offsetToCursor(offset),
+            node: medication
+          };
+        });
+      }
+    }
   },
   mutateAndGetPayload: ({userId, name, start, end, repeating, notes}) => {
-    addMedication(userId, name, start, end, repeating, notes);
-    return {userId};
+    const localUserId = fromGlobalId(userId).id;
+    return addMedication(localUserId, name, start, end, repeating, notes);
   },
 });
 
@@ -185,3 +200,4 @@ export var Schema = new GraphQLSchema({
   query: queryType,
   mutation: mutationType
 });
+

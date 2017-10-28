@@ -661,6 +661,18 @@
               "deprecationReason": null
             },
             {
+              "name": "medicationEdge",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "MedicationEdge",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "clientMutationId",
               "description": null,
               "args": [],

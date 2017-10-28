@@ -1,17 +1,6 @@
 import Relay from 'react-relay/classic';
 
 export default class AddMedicationMutation extends Relay.Mutation {
-// static fragments = {
-//     story: () => Relay.QL`
-//       fragment on Story {
-//         id,
-//       }
-//     `,
-//   };
-
-
-
-
 
   getMutation() {
     return Relay.QL`mutation{addMedication}`;
@@ -21,8 +10,11 @@ export default class AddMedicationMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on AddMedicationPayload @relay(pattern: true) {
         user {
-          medications,
+          medications {
+            edges
+          }
         },
+        medicationEdge
       }
     `;
   }
@@ -36,9 +28,6 @@ export default class AddMedicationMutation extends Relay.Mutation {
       edgeName: 'medicationEdge',
       rangeBehaviors: {
         '': 'append',
-        'status(any)': 'append',
-        'status(active)': 'append',
-        'status(completed)': null,
       },
     }];
   }
