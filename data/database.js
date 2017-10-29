@@ -25,6 +25,10 @@ var editMedication = function(id, name, start, end, repeating, notes) {
   return pool.query('UPDATE medications SET ("start", "end", "repeating", "notes", "name") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [start, end, repeating, notes, name, id]).then(res => res.rows[0]);
 }
 
+var deleteMedication = function(id) {
+  return pool.query('DELETE FROM medications WHERE id = ($1)', [id]);
+}
+
 module.exports = {
   getUserByEmail: getUserByEmail,
   getUserById: getUserById,
@@ -32,4 +36,5 @@ module.exports = {
   getMedications: getMedications,
   addMedication: addMedication,
   editMedication: editMedication,
+  deleteMedication: deleteMedication,
 };

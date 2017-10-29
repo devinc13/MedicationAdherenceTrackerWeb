@@ -38,6 +38,7 @@ import {
   getMedications,
   addMedication,
   editMedication,
+  deleteMedication,
 } from './database';
 
 /**
@@ -133,7 +134,6 @@ var queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     node: nodeField,
-    // Add your own root fields here
     user: {
       type: userType,
       args: {
@@ -143,6 +143,18 @@ var queryType = new GraphQLObjectType({
       },
       resolve: (root, {email}) => getUserByEmail(email),
     },
+    medication: {
+      type: medicationType,
+      args: {
+        id: {
+          type: GraphQLID
+        }
+      },
+      resolve: (root, {id}) => {
+        const localMedicationId = fromGlobalId(id).id;
+        return getMedication(localMedicationId);
+      },
+    }
   }),
 });
 
@@ -208,6 +220,27 @@ var EditMedicationMutation = mutationWithClientMutationId({
   },
 });
 
+var DeleteMedicationMutation = mutationWithClientMutationId({
+  name: 'DeleteMedication',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: medication => getUserById(medication.userid),
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ id }) => id,
+    }
+  },
+  mutateAndGetPayload: ({id, name, start, end, repeating, notes}) => {
+    const localMedicationId = fromGlobalId(id).id;
+    return deleteMedication(localMedicationId);
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -217,6 +250,7 @@ var mutationType = new GraphQLObjectType({
   fields: () => ({
     addMedication: AddMedicationMutation,
     editMedication: EditMedicationMutation,
+    deleteMedication: DeleteMedicationMutation,
   })
 });
 

@@ -12,6 +12,8 @@ import {
 
 import AddMedicationMutation from '../mutations/AddMedicationMutation';
 import EditMedicationMutation from '../mutations/EditMedicationMutation';
+import DeleteMedicationMutation from '../mutations/DeleteMedicationMutation';
+
 var dateFormat = require('dateformat');
 
 // Styles for this component
@@ -20,7 +22,6 @@ const Header = styled.div`
   margin: 10px;
 `;
 
-// Styles for this component
 const SpacingDiv = styled.div`
   margin: 20px;
 `;
@@ -36,6 +37,7 @@ class EditMedication extends React.Component {
       end: "",
       repeating: "",
       notes: "",
+      showDelete: false,
     };
   }
 
@@ -53,7 +55,7 @@ class EditMedication extends React.Component {
       mutation = new AddMedicationMutation(this.state);
     } else {
       failureMessage = "Error editing medication"
-      mutation = new EditMedicationMutation(this.state);;
+      mutation = new EditMedicationMutation(this.state);
     }
     
     const onSuccess = (response) => {
@@ -76,6 +78,24 @@ class EditMedication extends React.Component {
     this.setState(change);
   }
 
+  deleteMedication() {
+    const { user, medication } = this.props;
+
+    const onSuccess = (response) => {
+      window.location.href = "/";
+    };
+
+    const onFailure = (transaction) => {
+      console.log(transaction.getError().source);
+      window.alert("Error deleting medication");
+    };
+
+    let mutation = new DeleteMedicationMutation({ user, medication });
+
+    this.props.relay.commitUpdate(
+      mutation, {onFailure, onSuccess}
+    );
+  };
 
   FieldGroup({ id, label, ...props }) {
     return (
@@ -87,19 +107,19 @@ class EditMedication extends React.Component {
   }
 
   componentDidMount() {
-    let medicationId = this.props.id;
-    if (medicationId != "null") {
-      var medication = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id).node;
+    let medication = this.props.medication;
+    if (medication) {
       let start = new Date(Date.parse(medication.start));
       let end = new Date(Date.parse(medication.end));
 
       let newState = {};
-      newState["id"] = medicationId;
+      newState["id"] = medication.id;
       newState["name"] = medication.name;
       newState["start"] = dateFormat(start, "yyyy-m-d hh:MM:ss");
       newState["end"] = dateFormat(end, "yyyy-m-d hh:MM:ss");
       newState["repeating"] = medication.repeating;
       newState["notes"] = medication.notes;
+      newState["showDelete"] = true;
       this.setState(newState);
     }
   }
@@ -156,6 +176,8 @@ class EditMedication extends React.Component {
               Submit
             </Button>
           </form>
+          <br />
+          { this.state.showDelete ? <Button bsStyle="danger" onClick={this.deleteMedication.bind(this)}>Delete Medication</Button> : null }
         </SpacingDiv>
 
       </div>
@@ -168,6 +190,7 @@ export default Relay.createContainer(EditMedication, {
     user: () => Relay.QL`
       fragment on User {
         id,
+        ${DeleteMedicationMutation.getFragment('user')},
         medications(first: 20) {
           edges {
             node {
@@ -177,9 +200,21 @@ export default Relay.createContainer(EditMedication, {
               end,
               repeating,
               notes,
+              ${DeleteMedicationMutation.getFragment('medication')}
             },
           },
         },
+      }
+    `,
+    medication: () => Relay.QL`
+      fragment on Medication {
+        id,
+        name,
+        start,
+        end,
+        repeating,
+        notes,
+        ${DeleteMedicationMutation.getFragment('medication')}
       }
     `,
   },

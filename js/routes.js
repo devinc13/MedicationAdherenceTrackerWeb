@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 import Login from './components/Login';
 import Medication from './components/Medication';
-import EditMedication from './components/EditMedication';
+import EditMedicationWrapper from './components/EditMedicationWrapper';
 import Route from 'react-router/lib/Route';
 import UserQueries from './queries/UserQueries';
+import MedicationQueries from './queries/MedicationQueries';
 import Router from 'react-router/lib/Router';
 
 export default (
@@ -26,7 +27,7 @@ export default (
 		/>
 		<Route
 			path="editMedication/:id"
-			component={EditMedication}
+			component={EditMedicationWrapper}
 			queries={UserQueries}
 		/>
   	</Router>
