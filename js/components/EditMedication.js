@@ -43,14 +43,13 @@ class EditMedication extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const { user, medication } = this.props;
 
-    let medicationId = this.props.id;
-    this.state.userId = this.props.user.id;
-
+    this.state.userId = user.id;
     let mutation;
     let failureMessage = "";
 
-    if (medicationId == "null") {
+    if (!medication) {
       failureMessage = "Error adding medication";
       mutation = new AddMedicationMutation(this.state);
     } else {

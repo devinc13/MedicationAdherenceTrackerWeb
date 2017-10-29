@@ -7,9 +7,13 @@ import EditMedication from './EditMedication';
 
 class EditMedicationWrapper extends React.Component {
   render() {
-    const { user } = this.props;
-    const medication = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id).node;
-    
+    let user = this.props.user;
+    let medicationEdge = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id);
+    let medication = null;
+    if (medicationEdge) {
+      medication = medicationEdge.node;
+    }
+
     return <EditMedication user={user} medication={medication} />
   }
 }
