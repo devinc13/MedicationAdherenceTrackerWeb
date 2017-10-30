@@ -28,6 +28,7 @@ import {
   mutationWithClientMutationId,
   nodeDefinitions,
   offsetToCursor,
+  cursorForObjectInConnection,
 } from 'graphql-relay';
 
 import {
@@ -39,6 +40,10 @@ import {
   addMedication,
   editMedication,
   deleteMedication,
+  getUserByMedicationId,
+  addDosage,
+  getDosage,
+  getDosages,
 } from './database';
 
 /**
@@ -54,6 +59,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getUserById(id);
     } else if (type === 'Medication') {
       return getMedication(id);
+    } else if (type === 'Dosage') {
+      return getDosage(id);
     } else {
       return null;
     }
@@ -63,6 +70,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return userType;
     } else if (obj.__type === 'medication')  {
       return medicationType;
+    } else if (obj.__type === 'dosage')  {
+      return dosageType;
     } else {
       return null;
     }
@@ -118,6 +127,41 @@ var medicationType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Any notes about the medication',
     },
+    dosages: {
+      type: dosageConnection,
+      description: 'The dosages for the medication',
+      args: connectionArgs,
+      resolve: (medication, args) => getDosages(medication.id).then(arr => connectionFromArray(arr, args)),
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
+var dosageType = new GraphQLObjectType({
+  name: 'Dosage',
+  description: 'A dosage for a medication',
+  fields: () => ({
+    id: globalIdField('Dosage'),
+    dosageAmount: {
+      type: GraphQLString,
+      description: 'The amount of the dosage',
+    },
+    windowStartTime: {
+      type: GraphQLString,
+      description: 'Dosage window start time',
+    },
+    windowEndTime: {
+      type: GraphQLString,
+      description: 'Dosage window end time',
+    },
+    notificationTime: {
+      type: GraphQLString,
+      description: 'Time for the notification to show up',
+    },
+    route: {
+      type: GraphQLString,
+      description: 'The doage route',
+    },
   }),
   interfaces: [nodeInterface],
 });
@@ -125,6 +169,9 @@ var medicationType = new GraphQLObjectType({
 
 var {connectionType: medicationConnection, edgeType: medicationEdge} =
   connectionDefinitions({name: 'Medication', nodeType: medicationType});
+
+var {connectionType: dosageConnection, edgeType: dosageEdge} =
+  connectionDefinitions({name: 'Dosage', nodeType: dosageType});
 
 /**
  * This is the type that will be the root of our query,
@@ -241,6 +288,44 @@ var DeleteMedicationMutation = mutationWithClientMutationId({
   },
 });
 
+var AddDosageMutation = mutationWithClientMutationId({
+  name: 'AddDosage',
+  inputFields: {
+    medicationId: { type: new GraphQLNonNull(GraphQLID) },
+    dosageAmount: { type: new GraphQLNonNull(GraphQLString) },
+    windowStartTime: { type: new GraphQLNonNull(GraphQLString) },
+    windowEndTime: { type: new GraphQLNonNull(GraphQLString) },
+    notificationTime: { type: new GraphQLNonNull(GraphQLString) },
+    route: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: dosage => getUserByMedicationId(dosage.medicationid),
+    },
+    medication: {
+      type: medicationType,
+      resolve: dosage => getMedication(dosage.medicationid),
+    },
+    dosageEdge: {
+      type: dosageEdge,
+      resolve: dosage => {
+        return getDosages(dosage.medicationid).then(dosages => {
+          const offset = dosages.indexOf(dosages.find(d => d.id === dosage.id));
+          return {
+            cursor: offsetToCursor(offset),
+            node: dosage
+          };
+        });
+      }
+    }
+  },
+  mutateAndGetPayload: ({medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route}) => {
+    const localMedicationId = fromGlobalId(medicationId).id;
+    return addDosage(localMedicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route);
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -251,6 +336,7 @@ var mutationType = new GraphQLObjectType({
     addMedication: AddMedicationMutation,
     editMedication: EditMedicationMutation,
     deleteMedication: DeleteMedicationMutation,
+    addDosage: AddDosageMutation,
   })
 });
 

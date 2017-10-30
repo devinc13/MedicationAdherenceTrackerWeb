@@ -18,11 +18,11 @@ exports.up = function(db, callback) {
   db.createTable('dosages', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
     dosageAmount: 'string',
-    windowStartTime: 'timestamp',
-    windowEndTime: 'timestamp',
-    notificationTime: 'timestamp',
+    windowStartTime: 'time',
+    windowEndTime: 'time',
+    notificationTime: 'time',
     route: 'string',
-    medication: { type: 'int', 
+    medicationid: { type: 'int',
     	foreignKey: {
           name: 'dosage_medication_id_fk',
           table: 'medications',

@@ -29,6 +29,24 @@ var deleteMedication = function(id) {
   return pool.query('DELETE FROM medications WHERE id = ($1)', [id]);
 }
 
+var getUserByMedicationId = function(id) {
+  return pool.query('SELECT users.* FROM medications WHERE id = $1 JOIN users ON medications.userId = users.id', [id]).then(res => res.rows[0]);
+}
+
+// Gets dosage by dosage id
+var getDosage = function(id) {
+  return pool.query('SELECT * FROM dosages WHERE id = $1', [id]).then(res => res.rows[0]);
+}
+
+// Gets dosages by medication id
+var getDosages = function(id) {
+  return pool.query('SELECT * FROM dosages WHERE medicationId = $1', [id]).then(res => res.rows);
+}
+
+var addDosage = function(medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route) {
+  return pool.query('INSERT INTO dosages ("medicationid", "dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route]).then(res => res.rows[0]);
+}
+
 module.exports = {
   getUserByEmail: getUserByEmail,
   getUserById: getUserById,
@@ -37,4 +55,8 @@ module.exports = {
   addMedication: addMedication,
   editMedication: editMedication,
   deleteMedication: deleteMedication,
+  getUserByMedicationId: getUserByMedicationId,
+  getDosage: getDosage,
+  getDosages: getDosages,
+  addDosage: addDosage,
 };
