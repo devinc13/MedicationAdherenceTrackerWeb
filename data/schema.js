@@ -362,24 +362,27 @@ var DeleteDosageMutation = mutationWithClientMutationId({
   name: 'DeleteDosage',
   inputFields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
+    medicationid: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
     user: {
       type: userType,
-      resolve: dosage => getUserByMedicationId(dosage.medicationid),
+      resolve: ({ localMedicationId }) => getUserByMedicationId(localMedicationId),
     },
     medication: {
       type: medicationType,
-      resolve: dosage => getMedication(dosage.medicationid),
+      resolve: ({ localMedicationId }) => getMedication(localMedicationId),
     },
     deletedId: {
       type: GraphQLID,
       resolve: ({ id }) => id,
     }
   },
-  mutateAndGetPayload: ({id}) => {
+  mutateAndGetPayload: ({id, medicationid}) => {
     const localDosageId = fromGlobalId(id).id;
-    return deleteDosage(localDosageId);
+    const localMedicationId = fromGlobalId(medicationid).id;
+    deleteDosage(localDosageId);
+    return { id, localMedicationId };
   },
 });
 

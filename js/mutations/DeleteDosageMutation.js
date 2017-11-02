@@ -27,7 +27,15 @@ export default class DeleteDosageMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on DeleteDosagePayload @relay(pattern: true) {
-        user { medications },
+        user {
+          medications {
+            edges {
+              node {
+                dosages
+              }
+            }
+          }
+        },
         medication { dosages },
         deletedId
       }
@@ -47,6 +55,7 @@ export default class DeleteDosageMutation extends Relay.Mutation {
   getVariables() {
     return {
       id: this.props.dosage.id,
+      medicationid: this.props.medication.id,
     };
   }
 }
