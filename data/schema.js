@@ -44,6 +44,8 @@ import {
   addDosage,
   getDosage,
   getDosages,
+  editDosage,
+  deleteDosage,
 } from './database';
 
 /**
@@ -282,7 +284,7 @@ var DeleteMedicationMutation = mutationWithClientMutationId({
       resolve: ({ id }) => id,
     }
   },
-  mutateAndGetPayload: ({id, name, start, end, repeating, notes}) => {
+  mutateAndGetPayload: ({id}) => {
     const localMedicationId = fromGlobalId(id).id;
     return deleteMedication(localMedicationId);
   },
@@ -326,6 +328,61 @@ var AddDosageMutation = mutationWithClientMutationId({
   },
 });
 
+var EditDosageMutation = mutationWithClientMutationId({
+  name: 'EditDosage',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    dosageAmount: { type: new GraphQLNonNull(GraphQLString) },
+    windowStartTime: { type: new GraphQLNonNull(GraphQLString) },
+    windowEndTime: { type: new GraphQLNonNull(GraphQLString) },
+    notificationTime: { type: new GraphQLNonNull(GraphQLString) },
+    route: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: medication => getUserById(medication.userid),
+    },
+    medication: {
+      type: medicationType,
+      resolve: medication => getMedication(medication.id),
+    },
+    dosage: {
+      type: dosageType,
+      resolve: dosage => getDosage(dosage.id),
+    }
+  },
+  mutateAndGetPayload: ({id, dosageAmount, windowStartTime, windowEndTime, notificationTime, route}) => {
+    const localDosageId = fromGlobalId(id).id;
+    return editDosage(localDosageId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route);
+  },
+});
+
+var DeleteDosageMutation = mutationWithClientMutationId({
+  name: 'DeleteDosage',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    user: {
+      type: userType,
+      resolve: dosage => getUserByMedicationId(dosage.medicationid),
+    },
+    medication: {
+      type: medicationType,
+      resolve: dosage => getMedication(dosage.medicationid),
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ id }) => id,
+    }
+  },
+  mutateAndGetPayload: ({id}) => {
+    const localDosageId = fromGlobalId(id).id;
+    return deleteDosage(localDosageId);
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -337,6 +394,8 @@ var mutationType = new GraphQLObjectType({
     editMedication: EditMedicationMutation,
     deleteMedication: DeleteMedicationMutation,
     addDosage: AddDosageMutation,
+    editDosage: EditDosageMutation,
+    deleteDosage: DeleteDosageMutation,
   })
 });
 

@@ -24,7 +24,6 @@ const DosageDiv = styled.div`
 class Medication extends React.Component {
   render() {
     var medication = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id).node;
-    console.log(medication);
     return (
       <div>
         <Header>
@@ -50,6 +49,7 @@ class Medication extends React.Component {
               <br />
             </div>
           )}
+          <br />
           <Link to={`/medication/${medication.id}/editDosage/null`}>
             <Button bsStyle="primary" bsSize="large" block>Add new dosage</Button>
           </Link>

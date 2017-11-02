@@ -11,6 +11,8 @@ import {
   } from 'react-bootstrap/lib/';
 
  import AddDosageMutation from '../mutations/AddDosageMutation';
+ import EditDosageMutation from '../mutations/EditDosageMutation';
+ import DeleteDosageMutation from '../mutations/DeleteDosageMutation';
 
 // Styles for this component
 const Header = styled.div`
@@ -49,7 +51,7 @@ class EditDosage extends React.Component {
       mutation = new AddDosageMutation(this.state);
     } else {
       failureMessage = "Error editing dosage"
-      //mutation = new EditDosageMutation(this.state);
+      mutation = new EditDosageMutation(this.state);
     }
     
     const onSuccess = (response) => {
@@ -60,8 +62,6 @@ class EditDosage extends React.Component {
       console.log(transaction.getError().source);
       window.alert(failureMessage);
     };
-
-    console.log(this.state);
 
     this.props.relay.commitUpdate(
       mutation, {onFailure, onSuccess}
@@ -75,23 +75,22 @@ class EditDosage extends React.Component {
   }
 
   deleteDosage() {
-    return;
-    // const { user, medication } = this.props;
+    const { user, medication, dosage } = this.props;
 
-    // const onSuccess = (response) => {
-    //   window.location.href = "/";
-    // };
+    const onSuccess = (response) => {
+      window.location.href = "/";
+    };
 
-    // const onFailure = (transaction) => {
-    //   console.log(transaction.getError().source);
-    //   window.alert("Error deleting medication");
-    // };
+    const onFailure = (transaction) => {
+      console.log(transaction.getError().source);
+      window.alert("Error deleting dosage");
+    };
 
-    // let mutation = new DeleteMedicationMutation({ user, medication });
+    let mutation = new DeleteDosageMutation({ user, medication, dosage });
 
-    // this.props.relay.commitUpdate(
-    //   mutation, {onFailure, onSuccess}
-    // );
+    this.props.relay.commitUpdate(
+      mutation, {onFailure, onSuccess}
+    );
   };
 
   FieldGroup({ id, label, ...props }) {
@@ -104,7 +103,6 @@ class EditDosage extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     let medication = this.props.medication;
     let newState = {};
     newState["medicationId"] = medication.id;
@@ -188,6 +186,7 @@ export default Relay.createContainer(EditDosage, {
     user: () => Relay.QL`
       fragment on User {
         id,
+        ${DeleteDosageMutation.getFragment('user')},
         medications(first: 20) {
           edges {
             node {
@@ -204,6 +203,7 @@ export default Relay.createContainer(EditDosage, {
     `,
     medication: () => Relay.QL`
       fragment on Medication {
+        ${DeleteDosageMutation.getFragment('medication')},
         id,
         name,
         start,
@@ -214,6 +214,7 @@ export default Relay.createContainer(EditDosage, {
     `,
     dosage: () => Relay.QL`
       fragment on Dosage {
+        ${DeleteDosageMutation.getFragment('dosage')},
         id,
         dosageAmount,
         windowStartTime,

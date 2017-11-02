@@ -47,6 +47,14 @@ var addDosage = function(medicationId, dosageAmount, windowStartTime, windowEndT
   return pool.query('INSERT INTO dosages ("medicationid", "dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route]).then(res => res.rows[0]);
 }
 
+var editDosage = function(id, dosageAmount, windowStartTime, windowEndTime, notificationTime, route) {
+  return pool.query('UPDATE dosages SET ("dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [dosageAmount, windowStartTime, windowEndTime, notificationTime, route, id]).then(res => res.rows[0]);
+}
+
+var deleteDosage = function(id) {
+  return pool.query('DELETE FROM dosages WHERE id = ($1)', [id]);
+}
+
 module.exports = {
   getUserByEmail: getUserByEmail,
   getUserById: getUserById,
@@ -59,4 +67,6 @@ module.exports = {
   getDosage: getDosage,
   getDosages: getDosages,
   addDosage: addDosage,
+  editDosage: editDosage,
+  deleteDosage: deleteDosage,
 };
