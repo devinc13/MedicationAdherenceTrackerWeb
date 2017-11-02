@@ -31,7 +31,7 @@ class EditMedication extends React.Component {
       name: "",
       start: "",
       end: "",
-      repeating: "",
+      repeating: "daily",
       notes: "",
       showDelete: false,
     };
@@ -153,14 +153,13 @@ class EditMedication extends React.Component {
               value={this.state.end}
               onChange={this.handleChange.bind(this, 'end')}
             />
-            <this.FieldGroup
-              id="formControlsRepeating"
-              type="text"
-              label="Repeating"
-              placeholder="Select repeating pattern"
-              value={this.state.repeating}
-              onChange={this.handleChange.bind(this, 'repeating')}
-            />
+            <FormGroup controlId="formControlsRepeating">
+              <ControlLabel>Repeating</ControlLabel>
+              <FormControl componentClass="select" value={this.state.repeating} placeholder="" onChange={this.handleChange.bind(this, 'repeating')}>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+              </FormControl>
+            </FormGroup>
             <this.FieldGroup
               id="formControlsNotes"
               type="text"
@@ -217,3 +216,6 @@ export default Relay.createContainer(EditMedication, {
     `,
   },
 });
+
+
+
