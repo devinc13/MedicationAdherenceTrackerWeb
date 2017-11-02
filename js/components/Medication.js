@@ -4,12 +4,9 @@ import Relay from 'react-relay/classic';
 import styled from 'styled-components';
 import Link from 'react-router/lib/Link';
 import Button from 'react-bootstrap/lib/Button';
+import Header from './Header';
 
 // Styles for this component
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
 
 const MedicationDiv = styled.div`
   text-align: center;
@@ -23,12 +20,12 @@ const DosageDiv = styled.div`
 
 class Medication extends React.Component {
   render() {
+    var user = this.props.user;
     var medication = this.props.user.medications.edges.find(edge => edge.node.id == this.props.id).node;
     return (
       <div>
-        <Header>
-          <h1>Medication Adherence Tracker</h1>
-        </Header>
+        <Header user={user} />
+
         <MedicationDiv>
           <h3>{medication.name}</h3>
           Start: {medication.start}
@@ -63,6 +60,7 @@ export default Relay.createContainer(Medication, {
   fragments: {
     user: () => Relay.QL`
       fragment on User {
+        ${Header.getFragment('user')},
         id,
         medications(first: 20) {
           edges {

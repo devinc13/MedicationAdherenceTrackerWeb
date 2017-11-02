@@ -13,15 +13,11 @@ import {
 import AddMedicationMutation from '../mutations/AddMedicationMutation';
 import EditMedicationMutation from '../mutations/EditMedicationMutation';
 import DeleteMedicationMutation from '../mutations/DeleteMedicationMutation';
+import Header from './Header';
 
 var dateFormat = require('dateformat');
 
 // Styles for this component
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
-
 const SpacingDiv = styled.div`
   margin: 20px;
 `;
@@ -48,17 +44,20 @@ class EditMedication extends React.Component {
     this.state.userId = user.id;
     let mutation;
     let failureMessage = "";
+    let successLocation = "";
 
     if (!medication) {
       failureMessage = "Error adding medication";
       mutation = new AddMedicationMutation(this.state);
+      successLocation = "/";
     } else {
       failureMessage = "Error editing medication"
       mutation = new EditMedicationMutation(this.state);
+      successLocation = "#/medication/" + medication.id;
     }
     
     const onSuccess = (response) => {
-      window.location.href = "/";
+      window.location.href = successLocation;
     };
 
     const onFailure = (transaction) => {
@@ -124,11 +123,10 @@ class EditMedication extends React.Component {
   }
 
   render() {
+    var user = this.props.user;
     return (
       <div>
-        <Header>
-        <h1>Medication Adherence Tracker</h1>
-        </Header>
+        <Header user={user} />
         <SpacingDiv>
           <form onSubmit={this.handleSubmit.bind(this)}>
             <this.FieldGroup
@@ -188,6 +186,7 @@ export default Relay.createContainer(EditMedication, {
   fragments: {
     user: () => Relay.QL`
       fragment on User {
+        ${Header.getFragment('user')},
         id,
         ${DeleteMedicationMutation.getFragment('user')},
         medications(first: 20) {

@@ -3,16 +3,12 @@ import Relay from 'react-relay/classic';
 
 import MedicationList from './MedicationList';
 import Graph from './Graph';
+import Header from './Header';
+
 import Panel from 'react-bootstrap/lib/Panel';
 import styled from 'styled-components';
-import Link from 'react-router/lib/Link';
 
 // Styles for this component
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
-
 const SpacedDiv = styled.div`
   margin: 2%;
   display: inline-block;
@@ -30,13 +26,7 @@ class App extends React.Component {
     var user = this.props.user;
     return (
       <div>
-        <Header>
-          <h1>Medication Adherence Tracker</h1>
-          Welcome {this.props.user.first_name} {this.props.user.last_name}
-          <br />
-          <Link to="/login">Sign out</Link>
-
-        </Header>
+        <Header user={user} />
 
         <SpacedDiv>
           <Panel header={'Adherence:'} bsStyle="primary">
@@ -66,6 +56,7 @@ export default Relay.createContainer(App, {
         last_name,
         ${MedicationList.getFragment('user')},
         ${Graph.getFragment('user')},
+        ${Header.getFragment('user')},
       }
     `,
   },

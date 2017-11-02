@@ -13,13 +13,9 @@ import {
  import AddDosageMutation from '../mutations/AddDosageMutation';
  import EditDosageMutation from '../mutations/EditDosageMutation';
  import DeleteDosageMutation from '../mutations/DeleteDosageMutation';
+import Header from './Header';
 
 // Styles for this component
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
-
 const SpacingDiv = styled.div`
   margin: 20px;
 `;
@@ -78,7 +74,7 @@ class EditDosage extends React.Component {
     const { user, medication, dosage } = this.props;
 
     const onSuccess = (response) => {
-      window.location.href = "/";
+      window.location.href = "#/medication/" + medication.id;
     };
 
     const onFailure = (transaction) => {
@@ -122,11 +118,10 @@ class EditDosage extends React.Component {
   }
 
   render() {
+    var user = this.props.user;
     return (
       <div>
-        <Header>
-        <h1>Medication Adherence Tracker</h1>
-        </Header>
+        <Header user={user} />
         <SpacingDiv>
           <form onSubmit={this.handleSubmit.bind(this)}>
             <this.FieldGroup
@@ -186,6 +181,7 @@ export default Relay.createContainer(EditDosage, {
     user: () => Relay.QL`
       fragment on User {
         id,
+        ${Header.getFragment('user')},
         ${DeleteDosageMutation.getFragment('user')},
         medications(first: 20) {
           edges {
