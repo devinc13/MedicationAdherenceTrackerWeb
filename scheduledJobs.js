@@ -3,15 +3,37 @@ var dateFormat = require('dateformat');
 const { Pool, Client } = require('pg');
 const pool = new Pool();
 
-var last_run = null;
+var lastRun = null;
 
 var hourlyAdherence = function() {
 	var rule = new schedule.RecurrenceRule();
-	// Every hour
-	//rule.minute = 0;
-	rule.second = new schedule.Range(0, 59, 5);
 
-	var j = schedule.scheduleJob(rule, updateAdherence);
+	// Every hour at the beginning of the hour
+	rule.minute = 0;
+
+	var j = schedule.scheduleJob(rule, updateAdherenceWrapper);
+}
+
+var updateAdherenceWrapper = function() {
+	if (lastRun == null) {
+		let currentDate = new Date();
+
+		// We only want to run this on completed hours, so subtract an hour from the floor (hourly floor) of the current date (schedule rule should have it very close to the floor)
+		currentDate.setMinutes(0);
+		currentDate.setSeconds(0);
+		currentDate.setMilliseconds(0);
+		// This handles rolling back the day if needed
+		currentDate.setHours(currentDate.getHours() - 1);
+		lastRun = currentDate;
+	}
+
+	let end = new Date(lastRun);
+	end.setHours(end.getHours() + 1);
+
+	updateAdherence(lastRun, end);
+
+	// Update lastRun for next iteration
+	lastRun = new Date(end);
 }
 
 // Update adherence table between from and to datetimes
