@@ -16,6 +16,7 @@ const GRAPHQL_PORT = 8080;
 
 let graphQLServer;
 let appServer;
+let hourlyAdherenceJob;
 
 function startAppServer(callback) {
   // Serve the Relay app
@@ -57,7 +58,7 @@ function startGraphQLServer(callback) {
 }
 
 function startScheduledTasks(callback) {
-  hourlyAdherence();
+  hourlyAdherenceJob = hourlyAdherence();
 
   console.log("Scheduled tasks started.")
 }
@@ -69,6 +70,10 @@ function startServers(callback) {
   }
   if (graphQLServer) {
     graphQLServer.close();
+  }
+  if (hourlyAdherenceJob) {
+    hourlyAdherenceJob.cancel();
+    hourlyAdherenceJob = null;
   }
 
   // Compile the schema

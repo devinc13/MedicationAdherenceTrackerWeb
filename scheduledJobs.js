@@ -11,7 +11,7 @@ var hourlyAdherence = function() {
 	// Every hour at the beginning of the hour
 	rule.minute = 0;
 
-	var j = schedule.scheduleJob(rule, updateAdherenceWrapper);
+	return schedule.scheduleJob(rule, updateAdherenceWrapper);
 }
 
 var updateAdherenceWrapper = function() {
