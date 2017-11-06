@@ -41,3 +41,5 @@ To create a db migration run `db-migrate create migrationname` to create a blank
 Write you migration using [do-migrate SQP API](https://db-migrate.readthedocs.io/en/latest/API/SQL/).
 
 Run `db-migrate up` to run the migration.
+
+Manually updating adherence info: If the server is running, it will update adherence information on an hourly basis. If you happen to not have the server running, but want to update adherence information for a specific amount of time, run the following (replacing dates as desired): `node manuallyUpdateAdherence.js '2017-11-06 01:00:00' '2017-11-12 23:00:00'`.

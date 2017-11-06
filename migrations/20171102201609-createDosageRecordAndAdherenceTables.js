@@ -15,7 +15,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db, callback) {
-  db.createTable('dosageRecordings', {
+  db.createTable('dosage_recordings', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
     timestamp: 'timestamp',
     notes: 'string',
@@ -32,7 +32,7 @@ exports.up = function(db, callback) {
     }
   }, callback);
 
-  db.createTable('dosageAdherences', {
+  db.createTable('dosage_adherences', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
     adhered: 'boolean',
     timestamp: 'timestamp',
@@ -52,8 +52,8 @@ exports.up = function(db, callback) {
 };
 
 exports.down = function(db, callback) {
-  db.dropTable('dosageRecordings', callback);
-  db.dropTable('dosageAdherences', callback);
+  db.dropTable('dosage_recordings', callback);
+  db.dropTable('dosage_adherences', callback);
 };
 
 exports._meta = {

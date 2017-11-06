@@ -113,8 +113,8 @@ class EditMedication extends React.Component {
       let newState = {};
       newState["id"] = medication.id;
       newState["name"] = medication.name;
-      newState["start"] = dateFormat(start, "yyyy-m-d hh:MM:ss");
-      newState["end"] = dateFormat(end, "yyyy-m-d hh:MM:ss");
+      newState["start"] = dateFormat(start, "yyyy-m-d HH:MM:ss");
+      newState["end"] = dateFormat(end, "yyyy-m-d HH:MM:ss");
       newState["repeating"] = medication.repeating;
       newState["notes"] = medication.notes;
       newState["showDelete"] = true;

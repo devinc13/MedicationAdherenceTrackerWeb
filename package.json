@@ -23,6 +23,7 @@
     "express-graphql": "0.5.4",
     "graphql": "0.7.0",
     "graphql-relay": "0.4.3",
+    "node-schedule": "1.2.5",
     "react": "15.6.2",
     "react-bootstrap": "0.31.3",
     "react-dom": "^15.3.1",

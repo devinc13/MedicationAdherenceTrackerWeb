@@ -7,6 +7,9 @@ import WebpackDevServer from 'webpack-dev-server';
 import {clean} from 'require-clean';
 import {exec} from 'child_process';
 import config from './webpack.config';
+import {
+  hourlyAdherence,
+} from './scheduledJobs';
 
 const APP_PORT = 3000;
 const GRAPHQL_PORT = 8080;
@@ -53,6 +56,12 @@ function startGraphQLServer(callback) {
   });
 }
 
+function startScheduledTasks(callback) {
+  hourlyAdherence();
+
+  console.log("Scheduled tasks started.")
+}
+
 function startServers(callback) {
   // Shut down the servers
   if (appServer) {
@@ -68,12 +77,13 @@ function startServers(callback) {
     let doneTasks = 0;
     function handleTaskDone() {
       doneTasks++;
-      if (doneTasks === 2 && callback) {
+      if (doneTasks === 3 && callback) {
         callback();
       }
     }
     startGraphQLServer(handleTaskDone);
     startAppServer(handleTaskDone);
+    startScheduledTasks(handleTaskDone)
   });
 }
 const watcher = chokidar.watch('./data/{database,schema}.js');
