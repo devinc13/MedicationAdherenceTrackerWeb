@@ -32,7 +32,6 @@ import {
 } from 'graphql-relay';
 
 import {
-  // Import methods that your schema can use to interact with your database
   getUserById,
   getUserByEmail,
   getMedication,
@@ -46,6 +45,8 @@ import {
   getDosages,
   editDosage,
   deleteDosage,
+  getAdherence,
+  getDosageAdherences,
 } from './database';
 
 /**
@@ -63,6 +64,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getMedication(id);
     } else if (type === 'Dosage') {
       return getDosage(id);
+    } else if (type === 'Adherence') {
+      return getAdherence(id);
     } else {
       return null;
     }
@@ -74,6 +77,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return medicationType;
     } else if (obj.__type === 'dosage')  {
       return dosageType;
+    } else if (obj.__type === 'adherence')  {
+      return adherenceType;
     } else {
       return null;
     }
@@ -164,6 +169,33 @@ var dosageType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The doage route',
     },
+    dosageAdherences: {
+      type: adherenceConnection,
+      description: 'The adherence informatoin for the dosage',
+      args: connectionArgs,
+      resolve: (dosage, args) => getDosageAdherences(dosage.id).then(arr => connectionFromArray(arr, args)),
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
+var adherenceType = new GraphQLObjectType({
+  name: 'Adherence',
+  description: 'An adherence entry for a dosage',
+  fields: () => ({
+    id: globalIdField('Adherence'),
+    adhered: {
+      type: GraphQLBoolean,
+      description: 'If the dosage instance was adhered to',
+    },
+    timestamp: {
+      type: GraphQLString,
+      description: 'Dosage time OR end of adherence window if not adhered',
+    },
+    notes: {
+      type: GraphQLString,
+      description: 'Dosage notes',
+    },
   }),
   interfaces: [nodeInterface],
 });
@@ -174,6 +206,9 @@ var {connectionType: medicationConnection, edgeType: medicationEdge} =
 
 var {connectionType: dosageConnection, edgeType: dosageEdge} =
   connectionDefinitions({name: 'Dosage', nodeType: dosageType});
+
+var {connectionType: adherenceConnection, edgeType: adherenceEdge} =
+  connectionDefinitions({name: 'Adherence', nodeType: adherenceType});
 
 /**
  * This is the type that will be the root of our query,

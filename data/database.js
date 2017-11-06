@@ -55,6 +55,14 @@ var deleteDosage = function(id) {
   return pool.query('DELETE FROM dosages WHERE id = ($1)', [id]);
 }
 
+var getAdherence = function(id) {
+  return pool.query('SELECT * FROM dosage_adherences WHERE id = $1', [id]).then(res => res.rows[0]);
+}
+
+var getDosageAdherences = function(id) {
+  return pool.query('SELECT * FROM dosage_adherences WHERE dosageid = $1', [id]).then(res => res.rows);
+}
+
 module.exports = {
   getUserByEmail: getUserByEmail,
   getUserById: getUserById,
@@ -69,4 +77,6 @@ module.exports = {
   addDosage: addDosage,
   editDosage: editDosage,
   deleteDosage: deleteDosage,
+  getAdherence: getAdherence,
+  getDosageAdherences: getDosageAdherences,
 };

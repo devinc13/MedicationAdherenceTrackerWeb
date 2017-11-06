@@ -38,11 +38,11 @@ var updateAdherenceWrapper = function() {
 
 // Update adherence table between from and to datetimes
 var updateAdherence = function(from, to) {
-	formattedStart = dateFormat(from, "yyyy-m-d HH:MM:ss");
-	formattedEnd = dateFormat(to, "yyyy-m-d HH:MM:ss");
+	let formattedStart = dateFormat(from, "yyyy-m-d HH:MM:ss");
+	let formattedEnd = dateFormat(to, "yyyy-m-d HH:MM:ss");
 
-	formattedStartTime = dateFormat(from, "HH:MM:ss");
-	formattedEndTime = dateFormat(to, "HH:MM:ss");
+	let formattedStartTime = dateFormat(from, "HH:MM:ss");
+	let formattedEndTime = dateFormat(to, "HH:MM:ss");
 
 	console.log("Updating adherence for " + formattedStart + " to " + formattedEnd + ".");
 
