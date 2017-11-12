@@ -71,6 +71,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
     }
   },
   (obj) => {
+    console.log(obj);
+    console.log(obj.__type);
     if (obj.__type === 'user') {
       return userType;
     } else if (obj.__type === 'medication')  {
@@ -171,9 +173,17 @@ var dosageType = new GraphQLObjectType({
     },
     dosageAdherences: {
       type: adherenceConnection,
-      description: 'The adherence informatoin for the dosage',
-      args: connectionArgs,
-      resolve: (dosage, args) => getDosageAdherences(dosage.id).then(arr => connectionFromArray(arr, args)),
+      description: 'The adherence information for the dosage',
+      args: {
+        ...connectionArgs,
+        startTimestamp: {
+          type: GraphQLString
+        },
+        endTimestamp: {
+          type: GraphQLString
+        },
+      },
+      resolve: (dosage, args) => getDosageAdherences(dosage.id, args).then(arr => connectionFromArray(arr, args)),
     },
   }),
   interfaces: [nodeInterface],

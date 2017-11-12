@@ -751,7 +751,7 @@
             },
             {
               "name": "dosageAdherences",
-              "description": "The adherence informatoin for the dosage",
+              "description": "The adherence information for the dosage",
               "args": [
                 {
                   "name": "after",
@@ -789,6 +789,26 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "startTimestamp",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "endTimestamp",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null

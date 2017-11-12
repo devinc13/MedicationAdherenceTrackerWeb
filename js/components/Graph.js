@@ -2,6 +2,8 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import styled from 'styled-components';
 
+var DatePicker = require("react-bootstrap-date-picker");
+
 const DosageDiv = styled.div`
   margin-left: 20px;
 `;
@@ -10,27 +12,50 @@ const AdherenceDiv = styled.div`
   margin-left: 40px;
 `;
 
+const MainDiv = styled.div`
+  overflow: auto;
+  height: 500px;
+`;
+
 class Graph extends React.Component {
-  graphError = function() {
-    return (
-      <div>
-        <h3>Error creating graph</h3>
-      </div>
-      );
+  constructor() {
+    super();
+    var value = new Date().toISOString();
+
+    this.state = {
+      value: value
+    };
   }
+
+  handleChange(value, formattedValue) {
+    this.setState({
+      value: value, // ISO String, ex: "2016-11-19T12:00:00.000Z" 
+      formattedValue: formattedValue // Formatted String, ex: "11/19/2016" 
+    });
+
+    console.log(value);
+
+    this.props.relay.setVariables({
+      startTimestamp: value,
+      endTimestamp: value,
+    });
+  }
+
+  // componentDidUpdate(){
+  //   var hiddenInputElement = document.getElementById("start-date-datepicker");
+  //   console.log(hiddenInputElement.value); // ISO String, ex: "2016-11-19T12:00:00.000Z" 
+  //   console.log(hiddenInputElement.getAttribute('data-formattedvalue')) // Formatted String, ex: "11/19/2016"
+
+
+  // }
 
   render() {
     let user = this.props.user;
     let medications = user.medications;
-    //console.log(this.props.user.medications.edges[0].node.dosages.edges[0].node.id);
-    console.log(medications);
     let unwrappedMedications = medications.edges.map(edge => edge.node);
-    console.log(unwrappedMedications);
-    console.log(unwrappedMedications[0].dosages.edges[0]);
-
 
     return (
-    	<div>
+    	<MainDiv>
 	      {unwrappedMedications.map(medication =>
           <div key={medication.id}>
             {medication.name}
@@ -45,16 +70,21 @@ class Graph extends React.Component {
                 )}
               </DosageDiv>
             )}
-          
           </div>
         )}
 
-		  </div>
+      <DatePicker id="start-date-datepicker" value={this.state.value} onChange={this.handleChange.bind(this)} />
+
+		  </MainDiv>
     );
   }
 }
 
 export default Relay.createContainer(Graph, {
+  initialVariables: {
+    startTimestamp: null,
+    endTimestamp: null,
+  },
   fragments: {
     user: () => Relay.QL`
       fragment on User {
@@ -75,7 +105,7 @@ export default Relay.createContainer(Graph, {
                     dosageAmount,
                     windowStartTime,
                     windowEndTime,
-                    dosageAdherences(first: 20) {
+                    dosageAdherences(first: 20, startTimestamp: $startTimestamp, endTimestamp: $endTimestamp) {
                       edges {
                         node {
                           id,

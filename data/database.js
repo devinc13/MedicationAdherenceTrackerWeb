@@ -59,7 +59,8 @@ var getAdherence = function(id) {
   return pool.query('SELECT * FROM dosage_adherences WHERE id = $1', [id]).then(res => res.rows[0]);
 }
 
-var getDosageAdherences = function(id) {
+var getDosageAdherences = function(id, args) {
+  console.log(args);
   return pool.query('SELECT * FROM dosage_adherences WHERE dosageid = $1', [id]).then(res => res.rows);
 }
 
