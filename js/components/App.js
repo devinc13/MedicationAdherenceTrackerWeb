@@ -29,7 +29,7 @@ class App extends React.Component {
         <Header user={user} />
 
         <SpacedDiv>
-          <Panel header={'Adherence:'} bsStyle="primary">
+          <Panel header={'Weekly Adherence:'} bsStyle="primary">
             <HeightDiv>
               <Graph user={user} />
             </HeightDiv>

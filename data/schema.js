@@ -32,6 +32,10 @@ import {
 } from 'graphql-relay';
 
 import {
+  User,
+  Medication,
+  Dosage,
+  Adherence,
   getUserById,
   getUserByEmail,
   getMedication,
@@ -71,15 +75,13 @@ var {nodeInterface, nodeField} = nodeDefinitions(
     }
   },
   (obj) => {
-    console.log(obj);
-    console.log(obj.__type);
-    if (obj.__type === 'user') {
+    if (obj instanceof User) {
       return userType;
-    } else if (obj.__type === 'medication')  {
+    } else if (obj instanceof Medication)  {
       return medicationType;
-    } else if (obj.__type === 'dosage')  {
+    } else if (obj instanceof Dosage)  {
       return dosageType;
-    } else if (obj.__type === 'adherence')  {
+    } else if (obj instanceof Adherence)  {
       return adherenceType;
     } else {
       return null;

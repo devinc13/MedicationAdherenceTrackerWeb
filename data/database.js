@@ -1,28 +1,87 @@
 const { Pool, Client } = require('pg');
 const pool = new Pool();
+const dateFormat = require('dateformat');
+
+class User {}
+class Medication {}
+class Dosage {}
+class Adherence {}
+
 
 var getUserByEmail = function(email) {
-  return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => res.rows[0]);
+  return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => {
+
+    var user = new User();
+    for (let property in res.rows[0]) {
+      user[property] = res.rows[0][property];
+    }
+
+    return user;
+  });
 }
 
 var getUserById = function(id) {
-  return pool.query('SELECT * FROM users WHERE id = $1', [id]).then(res => res.rows[0]);
+  return pool.query('SELECT * FROM users WHERE id = $1', [id]).then(res => {
+
+    var user = new User();
+    for (let property in res.rows[0]) {
+      user[property] = res.rows[0][property];
+    }
+
+    return user;
+  });
 }
 
 var getMedications = function(id) {
-  return pool.query('SELECT * FROM medications WHERE userid = $1', [id]).then(res => res.rows);
+  return pool.query('SELECT * FROM medications WHERE userid = $1', [id]).then(res => {
+    var medications = [];
+    let numRows = res.rows.length;
+    for (let i = 0; i < numRows; i++) {
+      var medication = new Medication();
+      for (let property in res.rows[i]) {
+        medication[property] = res.rows[i][property];
+      }
+      medications.push(medication);
+    }
+
+    return medications;
+  });
 }
 
 var getMedication = function(id) {
-  return pool.query('SELECT * FROM medications WHERE id = $1', [id]).then(res => res.rows[0]);
+  return pool.query('SELECT * FROM medications WHERE id = $1', [id]).then(res => {
+
+    var medication = new Medication();
+    for (let property in res.rows[0]) {
+      medication[property] = res.rows[0][property];
+    }
+
+    return medication;
+  });
 }
 
 var addMedication = function(userId, name, start, end, repeating, notes) {
-  return pool.query('INSERT INTO medications ("start", "end", "repeating", "notes", "userid", "name") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [start, end, repeating, notes, userId, name]).then(res => res.rows[0]);
+  return pool.query('INSERT INTO medications ("start", "end", "repeating", "notes", "userid", "name") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [start, end, repeating, notes, userId, name]).then(res => {
+
+    var medication = new Medication();
+    for (let property in res.rows[0]) {
+      medication[property] = res.rows[0][property];
+    }
+
+    return medication;
+  });
 }
 
 var editMedication = function(id, name, start, end, repeating, notes) {
-  return pool.query('UPDATE medications SET ("start", "end", "repeating", "notes", "name") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [start, end, repeating, notes, name, id]).then(res => res.rows[0]);
+  return pool.query('UPDATE medications SET ("start", "end", "repeating", "notes", "name") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [start, end, repeating, notes, name, id]).then(res => {
+
+    var medication = new Medication();
+    for (let property in res.rows[0]) {
+      medication[property] = res.rows[0][property];
+    }
+
+    return medication;
+  });
 }
 
 var deleteMedication = function(id) {
@@ -30,25 +89,69 @@ var deleteMedication = function(id) {
 }
 
 var getUserByMedicationId = function(id) {
-  return pool.query('SELECT users.* FROM medications WHERE id = $1 JOIN users ON medications.userId = users.id', [id]).then(res => res.rows[0]);
+  return pool.query('SELECT users.* FROM medications WHERE id = $1 JOIN users ON medications.userId = users.id', [id]).then(res => {
+
+    var user = new User();
+    for (let property in res.rows[0]) {
+      user[property] = res.rows[0][property];
+    }
+
+    return user;
+  });
 }
 
 // Gets dosage by dosage id
 var getDosage = function(id) {
-  return pool.query('SELECT * FROM dosages WHERE id = $1', [id]).then(res => res.rows[0]);
+  return pool.query('SELECT * FROM dosages WHERE id = $1', [id]).then(res => {
+
+    var dosage = new Dosage();
+    for (let property in res.rows[0]) {
+      dosage[property] = res.rows[0][property];
+    }
+
+    return dosage;
+  });
 }
 
 // Gets dosages by medication id
 var getDosages = function(id) {
-  return pool.query('SELECT * FROM dosages WHERE medicationId = $1', [id]).then(res => res.rows);
+  return pool.query('SELECT * FROM dosages WHERE medicationId = $1', [id]).then(res => {
+    var dosages = [];
+    let numRows = res.rows.length;
+    for (let i = 0; i < numRows; i++) {
+      var dosage = new Dosage();
+      for (let property in res.rows[i]) {
+        dosage[property] = res.rows[i][property];
+      }
+      dosages.push(dosage);
+    }
+
+    return dosages;
+  });
 }
 
 var addDosage = function(medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route) {
-  return pool.query('INSERT INTO dosages ("medicationid", "dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route]).then(res => res.rows[0]);
+  return pool.query('INSERT INTO dosages ("medicationid", "dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [medicationId, dosageAmount, windowStartTime, windowEndTime, notificationTime, route]).then(res => {
+
+    var dosage = new Dosage();
+    for (let property in res.rows[0]) {
+      dosage[property] = res.rows[0][property];
+    }
+
+    return dosage;
+  });
 }
 
 var editDosage = function(id, dosageAmount, windowStartTime, windowEndTime, notificationTime, route) {
-  return pool.query('UPDATE dosages SET ("dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [dosageAmount, windowStartTime, windowEndTime, notificationTime, route, id]).then(res => res.rows[0]);
+  return pool.query('UPDATE dosages SET ("dosageAmount", "windowStartTime", "windowEndTime", "notificationTime", "route") = ($1, $2, $3, $4, $5) WHERE id = ($6) RETURNING *', [dosageAmount, windowStartTime, windowEndTime, notificationTime, route, id]).then(res => {
+
+    var dosage = new Dosage();
+    for (let property in res.rows[0]) {
+      dosage[property] = res.rows[0][property];
+    }
+
+    return dosage;
+  });
 }
 
 var deleteDosage = function(id) {
@@ -56,15 +159,52 @@ var deleteDosage = function(id) {
 }
 
 var getAdherence = function(id) {
-  return pool.query('SELECT * FROM dosage_adherences WHERE id = $1', [id]).then(res => res.rows[0]);
+  var adherence = new Adherence();
+  return pool.query('SELECT * FROM dosage_adherences WHERE id = $1', [id]).then(res => {
+
+    var adherence = new Adherence();
+    for (let property in res.rows[0]) {
+      adherence[property] = res.rows[0][property];
+    }
+
+    return adherence;
+  });
 }
 
 var getDosageAdherences = function(id, args) {
-  console.log(args);
-  return pool.query('SELECT * FROM dosage_adherences WHERE dosageid = $1', [id]).then(res => res.rows);
+  let startString = args.startTimestamp;
+  let endString = args.endTimestamp;
+  let query = 'SELECT * FROM dosage_adherences WHERE dosageid = $1';
+  if (startString) {
+    let start = new Date(Date.parse(startString));
+    query += ' AND timestamp >= \'' + dateFormat(start, "yyyy-mm-dd HH:MM:ss") + '\'';
+  }
+
+  if (endString) {
+    let end = new Date(Date.parse(endString));
+    query += ' AND timestamp < \'' + dateFormat(end, "yyyy-mm-dd HH:MM:ss") + '\'';
+  }
+
+  return pool.query(query, [id]).then(res => {
+    var adherences = [];
+    let numRows = res.rows.length;
+    for (let i = 0; i < numRows; i++) {
+      var adherence = new Adherence();
+      for (let property in res.rows[i]) {
+        adherence[property] = res.rows[i][property];
+      }
+      adherences.push(adherence);
+    }
+
+    return adherences;
+  });
 }
 
 module.exports = {
+  User: User,
+  Medication: Medication,
+  Dosage: Dosage,
+  Adherence: Adherence,
   getUserByEmail: getUserByEmail,
   getUserById: getUserById,
   getMedication: getMedication,
