@@ -47,7 +47,7 @@ export default class DeleteDosageMutation extends Relay.Mutation {
       type: 'NODE_DELETE',
       parentName: 'medication',
       parentID: this.props.medication.id,
-      connectionName: 'Dosage',
+      connectionName: 'dosages',
       deletedIDFieldName: 'deletedId',
     }];
   }
