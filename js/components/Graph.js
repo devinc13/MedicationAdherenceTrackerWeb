@@ -6,6 +6,7 @@ const DatePicker = require("react-bootstrap-date-picker");
 const dateFormat = require('dateformat');
 
 const AdherenceDiv = styled.div`
+  position: relative;
   margin: 1%;
   display: inline-block;
   width: 12%;
@@ -47,7 +48,6 @@ const RedCircleDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-  overflow: auto;
   height: 500px;
 `;
 
@@ -57,6 +57,28 @@ const DatePickerDiv = styled.div`
   width: 46%;
   vertical-align: top;
   height: 100%;
+`;
+
+const AllData = styled.div`
+  position: absolute;
+  z-index: 100;
+  background: white;
+  border: 3px solid #a1a1a1;
+  padding: 10px;
+  top: 20px;
+  left: 40px;
+
+  ${AdherenceDiv}:not(:hover) & {
+    display: none;
+  }
+`
+
+const RedTextDiv = styled.div`
+  color: red;
+`;
+
+const GreenTextDiv = styled.div`
+  color: green;
 `;
 
 class Graph extends React.Component {
@@ -139,7 +161,13 @@ class Graph extends React.Component {
           if (dataEntry) {
             let adherenceEntry = {};
             adherenceEntry.adhered = dosageAdherence.adhered;
-            adherenceEntry.timestamp = dosageAdherence.timestamp;
+            if (dosageAdherence.adhered) {
+              let dosageAdherenceDate = new Date(Date.parse(dosageAdherence.timestamp));
+              adherenceEntry.time = dateFormat(dosageAdherenceDate, "HH:MM:ss");
+            } else {
+              adherenceEntry.time = "N/A";
+            }
+
             adherenceEntry.notes = dosageAdherence.notes;
             adherenceEntry.dosageAmount = dosage.dosageAmount;
             adherenceEntry.medicationName = medication.name;
@@ -190,6 +218,25 @@ class Graph extends React.Component {
             {dataEntry.result == "red" ? <RedCircleDiv></RedCircleDiv> : ""}
             <br />
             {dataEntry.date}
+
+            <AllData>
+              {dataEntry.adherences.length == 0 ? "No dosages on this day" : ""}
+              {dataEntry.adherences.map(adherence =>
+                <div key={adherence.medicationName + adherence.time + adherence.dosageAmount + dataEntry.date}>
+                  <b>{adherence.medicationName}</b>
+                  <br />
+                  {adherence.dosageAmount}
+                  <br />
+                  <b>{adherence.adhered ? <GreenTextDiv>Adhered</GreenTextDiv> : <RedTextDiv>Didn't Adhere</RedTextDiv> }</b>
+                  Time: {adherence.time}
+                  <br />
+                  Notes: {adherence.notes}
+                  <br />
+                  <br />
+                </div>
+              )}
+            </AllData>
+
           </AdherenceDiv>
         )}
 
