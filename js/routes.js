@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import Medication from './components/Medication';
 import EditMedicationWrapper from './components/EditMedicationWrapper';
 import EditDosageWrapper from './components/EditDosageWrapper';
@@ -20,6 +21,10 @@ export default (
 		<Route
 			path="login"
 			component={Login}
+		/>
+		<Route
+			path="signup"
+			component={Signup}
 		/>
 		<Route
 			path="medication/:id"

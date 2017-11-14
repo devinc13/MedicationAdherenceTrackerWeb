@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/lib/Button';
 import Header from './Header';
 
 // Styles for this component
-
 const MedicationDiv = styled.div`
   text-align: center;
   margin: 10px;

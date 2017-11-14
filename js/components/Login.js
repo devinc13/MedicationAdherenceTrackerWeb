@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
+import Link from 'react-router/lib/Link';
 
 // Styles for this component
 const Header = styled.div`
@@ -16,6 +17,8 @@ class Login extends React.Component {
         <Header>
         <h1>Medication Adherence Tracker</h1>
         Login
+        <br />
+        <Link to="/signup">Don't have an account? Sign up here!</Link>
         </Header>
       </div>
     );

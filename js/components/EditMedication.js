@@ -6,7 +6,6 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  HelpBlock,
   Button
   } from 'react-bootstrap/lib/';
 

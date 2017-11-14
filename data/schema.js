@@ -51,6 +51,7 @@ import {
   deleteDosage,
   getAdherence,
   getDosageAdherences,
+  addUser,
 } from './database';
 
 /**
@@ -433,6 +434,25 @@ var DeleteDosageMutation = mutationWithClientMutationId({
   },
 });
 
+var AddUserMutation = mutationWithClientMutationId({
+  name: 'AddUser',
+  inputFields: {
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    userId: {
+      type: GraphQLID,
+      resolve: (user) => user.id,
+    }
+  },
+  mutateAndGetPayload: ({firstName, lastName, email, password}) => {
+    return addUser(firstName, lastName, email, password);
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -446,6 +466,7 @@ var mutationType = new GraphQLObjectType({
     addDosage: AddDosageMutation,
     editDosage: EditDosageMutation,
     deleteDosage: DeleteDosageMutation,
+    addUser: AddUserMutation,
   })
 });
 

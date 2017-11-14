@@ -1,6 +1,7 @@
 const { Pool, Client } = require('pg');
 const pool = new Pool();
 const dateFormat = require('dateformat');
+const bcrypt = require('bcrypt-nodejs');
 
 class User {}
 class Medication {}
@@ -200,6 +201,13 @@ var getDosageAdherences = function(id, args) {
   });
 }
 
+var addUser = function(firstName, lastName, email, password) {
+  var salt = bcrypt.genSaltSync();
+  var hash = bcrypt.hashSync(password, salt);
+
+  return pool.query('INSERT INTO users ("first_name", "last_name", "email", "password_hash", "password_salt") VALUES ($1, $2, $3, $4, $5) RETURNING id', [firstName, lastName, email, hash, salt]).then(res => res.rows[0]);
+}
+
 module.exports = {
   User: User,
   Medication: Medication,
@@ -220,4 +228,5 @@ module.exports = {
   deleteDosage: deleteDosage,
   getAdherence: getAdherence,
   getDosageAdherences: getDosageAdherences,
+  addUser: addUser,
 };
