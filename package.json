@@ -24,6 +24,7 @@
     "express-graphql": "0.5.4",
     "graphql": "0.7.0",
     "graphql-relay": "0.4.3",
+    "jsonwebtoken": "8.1.0",
     "node-schedule": "1.2.5",
     "react": "15.6.2",
     "react-bootstrap": "0.31.3",

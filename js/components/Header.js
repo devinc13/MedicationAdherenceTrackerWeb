@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
+import {Button} from 'react-bootstrap/lib/';
 import Link from 'react-router/lib/Link';
 
 const StyledHeader = styled.div`
@@ -10,13 +11,19 @@ const StyledHeader = styled.div`
 `;
 
 class Header extends React.Component {
- render() {
+  logout() {
+    localStorage.removeItem('adherence_tracker_jwt_token');
+    window.location.href = "/";
+  }
+
+  render() {
     return (
       <StyledHeader>
         <Link to="/"><h1>Medication Adherence Tracker</h1></Link>
         Welcome {this.props.user.first_name} {this.props.user.last_name}
         <br />
-        <Link to="/login">Sign out</Link>
+
+        <Button onClick={this.logout}>Logout</Button>
 
       </StyledHeader>
     );

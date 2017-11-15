@@ -22,3 +22,13 @@ ReactDOM.render(
   />,
   document.getElementById('root')
 );
+
+var token = localStorage.getItem('adherence_tracker_jwt_token');
+
+Relay.injectNetworkLayer(
+  new Relay.DefaultNetworkLayer('http://localhost:3000/graphql', {
+    headers: {
+      Authorization: token
+    }
+  })
+);

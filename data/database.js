@@ -2,12 +2,12 @@ const { Pool, Client } = require('pg');
 const pool = new Pool();
 const dateFormat = require('dateformat');
 const bcrypt = require('bcrypt-nodejs');
+const jwt = require('jsonwebtoken');
 
 class User {}
 class Medication {}
 class Dosage {}
 class Adherence {}
-
 
 var getUserByEmail = function(email) {
   return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => {
@@ -208,6 +208,37 @@ var addUser = function(firstName, lastName, email, password) {
   return pool.query('INSERT INTO users ("first_name", "last_name", "email", "password_hash", "password_salt") VALUES ($1, $2, $3, $4, $5) RETURNING id', [firstName, lastName, email, hash, salt]).then(res => res.rows[0]);
 }
 
+var login = function(email, password) {
+    return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => {
+      let user = new User();
+
+      let response = res.rows;
+      if (response == []) {
+        // No user found, return blank user
+        return user;
+      } else {
+        let storedHash = response[0].password_hash;
+        let doesPasswordMatch = bcrypt.compareSync(password, storedHash);
+        if (!doesPasswordMatch) {
+          // Wrong password, return blank user
+          return user;
+        }
+      }
+
+      // If we get here, the user had a valid email with a matching password
+      for (let property in res.rows[0]) {
+        user[property] = res.rows[0][property];
+      }
+
+      // Create auth token for user
+      let secret = process.env.JWT_SECRET;
+      let token = jwt.sign({ id: user.id, email: user.email }, secret);
+      user["token"] = token;
+
+      return user;
+    });
+}
+
 module.exports = {
   User: User,
   Medication: Medication,
@@ -229,4 +260,5 @@ module.exports = {
   getAdherence: getAdherence,
   getDosageAdherences: getDosageAdherences,
   addUser: addUser,
+  login: login,
 };

@@ -11,12 +11,25 @@ import UserQueries from './queries/UserQueries';
 import MedicationQueries from './queries/MedicationQueries';
 import Router from 'react-router/lib/Router';
 
+const checkForErrors = ({ error, props, element }) => {
+	if (error) {
+		window.location.href = "#/login";
+	}
+
+	if (!props) {
+		return undefined;
+	}
+
+	return React.cloneElement(element, props);
+}
+
 export default (
 	<Router>
 		<Route
 			path="/"
 			component={App}
 			queries={UserQueries}
+			render={checkForErrors}
 		/>
 		<Route
 			path="login"
@@ -30,16 +43,19 @@ export default (
 			path="medication/:id"
 			component={Medication}
 			queries={UserQueries}
+			render={checkForErrors}
 		/>
 		<Route
 			path="editMedication/:id"
 			component={EditMedicationWrapper}
 			queries={UserQueries}
+			render={checkForErrors}
 		/>
 		<Route
 			path="medication/:medicationId/editDosage/:dosageId"
 			component={EditDosageWrapper}
 			queries={UserQueries}
+			render={checkForErrors}
 		/>
   	</Router>
 );

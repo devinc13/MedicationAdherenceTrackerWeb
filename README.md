@@ -11,7 +11,7 @@ npm install
 
 Install postgres.
 
-Create a user, a database, and create the `PGUSER`, `PGPASSWORD`, `PGHOST` and `PGDATABASE` environment variables for the username, password, host and database name.
+Create a user, a database, and create the `PGUSER`, `PGPASSWORD`, `PGHOST` and `PGDATABASE` environment variables for the username, password, host and database name. Create the `JWT_SECRET` environment variable to store the secret used for JSON web token authentication.
 
 Run migrations by typing `db-migrate up`.
 

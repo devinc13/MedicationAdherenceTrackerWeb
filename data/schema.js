@@ -52,7 +52,10 @@ import {
   getAdherence,
   getDosageAdherences,
   addUser,
+  login,
 } from './database';
+
+const jwt = require('jsonwebtoken');
 
 /**
  * We get the node interface and field from the Relay library.
@@ -238,7 +241,19 @@ var queryType = new GraphQLObjectType({
           type: GraphQLString
         }
       },
-      resolve: (root, {email}) => getUserByEmail(email),
+      resolve: (root, args, context) => {
+        if (context.headers.authorization != "null") {
+          let secret = process.env.JWT_SECRET;
+          try {
+            var decoded = jwt.verify(context.headers.authorization, secret);
+            return getUserByEmail(decoded.email);
+          } catch(err) {
+            throw new Error('Authorization token invalid.');
+          }
+        } else {
+          throw new Error('User not logged in.');
+        }
+      },
     },
     medication: {
       type: medicationType,
@@ -453,6 +468,23 @@ var AddUserMutation = mutationWithClientMutationId({
   },
 });
 
+var LoginMutation = mutationWithClientMutationId({
+  name: 'Login',
+  inputFields: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    token: {
+      type: GraphQLString,
+      resolve: (user) => user.token,
+    }
+  },
+  mutateAndGetPayload: ({email, password}) => {
+    return login(email, password);
+  },
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -467,6 +499,7 @@ var mutationType = new GraphQLObjectType({
     editDosage: EditDosageMutation,
     deleteDosage: DeleteDosageMutation,
     addUser: AddUserMutation,
+    login: LoginMutation,
   })
 });
 

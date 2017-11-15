@@ -53,7 +53,7 @@ class Signup extends React.Component {
     }
     
     const onSuccess = (response) => {
-      window.location.href = "#/";
+      window.location.href = "#/login";
     };
 
     const onFailure = (transaction) => {
