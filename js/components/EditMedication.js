@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
+import Panel from 'react-bootstrap/lib/Panel';
 import {
   FormGroup,
   ControlLabel,
@@ -18,7 +19,7 @@ var dateFormat = require('dateformat');
 
 // Styles for this component
 const SpacingDiv = styled.div`
-  margin: 20px;
+  margin: 40px;
 `;
 
 class EditMedication extends React.Component {
@@ -127,52 +128,54 @@ class EditMedication extends React.Component {
       <div>
         <Header user={user} />
         <SpacingDiv>
-          <form onSubmit={this.handleSubmit.bind(this)}>
-            <this.FieldGroup
-              id="formControlsName"
-              type="text"
-              label="Name"
-              placeholder="Enter medication name"
-              value={this.state.name}
-              onChange={this.handleChange.bind(this, 'name')}
-            />
-            <this.FieldGroup
-              id="formControlsStart"
-              type="text"
-              label="Start"
-              placeholder="Enter medication start time and date (eg. 2017-10-16 07:00:00)"
-              value={this.state.start}
-              onChange={this.handleChange.bind(this, 'start')}
-            />
-            <this.FieldGroup
-              id="formControlsEnd"
-              type="text"
-              label="End"
-              placeholder="Enter medication end time and date (eg. 2017-10-16 07:00:00)"
-              value={this.state.end}
-              onChange={this.handleChange.bind(this, 'end')}
-            />
-            <FormGroup controlId="formControlsRepeating">
-              <ControlLabel>Repeating</ControlLabel>
-              <FormControl componentClass="select" value={this.state.repeating} placeholder="" onChange={this.handleChange.bind(this, 'repeating')}>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-              </FormControl>
-            </FormGroup>
-            <this.FieldGroup
-              id="formControlsNotes"
-              type="text"
-              label="Notes"
-              placeholder="Enter any additional notes"
-              value={this.state.notes}
-              onChange={this.handleChange.bind(this, 'notes')}
-            />
-            <Button type="submit">
-              Submit
-            </Button>
-          </form>
-          <br />
-          { this.state.showDelete ? <Button bsStyle="danger" onClick={this.deleteMedication.bind(this)}>Delete Medication</Button> : null }
+          <Panel header="Medication" bsStyle="primary">
+            <form onSubmit={this.handleSubmit.bind(this)}>
+              <this.FieldGroup
+                id="formControlsName"
+                type="text"
+                label="Name"
+                placeholder="Enter medication name"
+                value={this.state.name}
+                onChange={this.handleChange.bind(this, 'name')}
+              />
+              <this.FieldGroup
+                id="formControlsStart"
+                type="text"
+                label="Start"
+                placeholder="Enter medication start time and date (eg. 2017-10-16 07:00:00)"
+                value={this.state.start}
+                onChange={this.handleChange.bind(this, 'start')}
+              />
+              <this.FieldGroup
+                id="formControlsEnd"
+                type="text"
+                label="End"
+                placeholder="Enter medication end time and date (eg. 2017-10-16 07:00:00)"
+                value={this.state.end}
+                onChange={this.handleChange.bind(this, 'end')}
+              />
+              <FormGroup controlId="formControlsRepeating">
+                <ControlLabel>Repeating</ControlLabel>
+                <FormControl componentClass="select" value={this.state.repeating} placeholder="" onChange={this.handleChange.bind(this, 'repeating')}>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                </FormControl>
+              </FormGroup>
+              <this.FieldGroup
+                id="formControlsNotes"
+                type="text"
+                label="Notes"
+                placeholder="Enter any additional notes"
+                value={this.state.notes}
+                onChange={this.handleChange.bind(this, 'notes')}
+              />
+              <Button type="submit" bsStyle="primary" bsSize="large">
+                Submit
+              </Button>
+            </form>
+            <br />
+            { this.state.showDelete ? <Button bsStyle="danger" onClick={this.deleteMedication.bind(this)}>Delete Medication</Button> : null }
+          </Panel>
         </SpacingDiv>
 
       </div>
@@ -187,7 +190,7 @@ export default Relay.createContainer(EditMedication, {
         ${Header.getFragment('user')},
         id,
         ${DeleteMedicationMutation.getFragment('user')},
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,

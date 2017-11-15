@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
+import Panel from 'react-bootstrap/lib/Panel';
 import {
   FormGroup,
   ControlLabel,
@@ -17,7 +18,7 @@ import Header from './Header';
 
 // Styles for this component
 const SpacingDiv = styled.div`
-  margin: 20px;
+  margin: 40px;
 `;
 
 class EditDosage extends React.Component {
@@ -123,53 +124,55 @@ class EditDosage extends React.Component {
       <div>
         <Header user={user} />
         <SpacingDiv>
-          <form onSubmit={this.handleSubmit.bind(this)}>
-            <this.FieldGroup
-              id="formControlsDosageAmout"
-              type="text"
-              label="Dosage Amount"
-              placeholder="Enter dosage amount (eg. 1 200mg pill)"
-              value={this.state.dosageAmount}
-              onChange={this.handleChange.bind(this, 'dosageAmount')}
-            />
-            <this.FieldGroup
-              id="formControlsWindowStartTime"
-              type="text"
-              label="Dosage window start time"
-              placeholder="This is the earliest the dose can be taken (eg. 09:00:00)"
-              value={this.state.windowStartTime}
-              onChange={this.handleChange.bind(this, 'windowStartTime')}
-            />
-            <this.FieldGroup
-              id="formControlsWindowEndTime"
-              type="text"
-              label="Dosage window end time"
-              placeholder="This is the latest the dose can be taken (eg. 13:00:00)"
-              value={this.state.windowEndTime}
-              onChange={this.handleChange.bind(this, 'windowEndTime')}
-            />
-            <this.FieldGroup
-              id="formControlsNotificationTime"
-              type="text"
-              label="Notification time"
-              placeholder="(eg. 13:00:00)"
-              value={this.state.notificationTime}
-              onChange={this.handleChange.bind(this, 'notificationTime')}
-            />
-            <this.FieldGroup
-              id="formControlsRoute"
-              type="text"
-              label="Route"
-              placeholder="(eg. Oral)"
-              value={this.state.route}
-              onChange={this.handleChange.bind(this, 'route')}
-            />
-            <Button type="submit">
-              Submit
-            </Button>
-          </form>
-          <br />
-          { this.state.showDelete ? <Button bsStyle="danger" onClick={this.deleteDosage.bind(this)}>Delete Dosage</Button> : null }
+          <Panel header="Dosage" bsStyle="primary">
+            <form onSubmit={this.handleSubmit.bind(this)}>
+              <this.FieldGroup
+                id="formControlsDosageAmout"
+                type="text"
+                label="Dosage Amount"
+                placeholder="Enter dosage amount (eg. 1 200mg pill)"
+                value={this.state.dosageAmount}
+                onChange={this.handleChange.bind(this, 'dosageAmount')}
+              />
+              <this.FieldGroup
+                id="formControlsWindowStartTime"
+                type="text"
+                label="Dosage window start time"
+                placeholder="This is the earliest the dose can be taken (eg. 09:00:00)"
+                value={this.state.windowStartTime}
+                onChange={this.handleChange.bind(this, 'windowStartTime')}
+              />
+              <this.FieldGroup
+                id="formControlsWindowEndTime"
+                type="text"
+                label="Dosage window end time"
+                placeholder="This is the latest the dose can be taken (eg. 13:00:00)"
+                value={this.state.windowEndTime}
+                onChange={this.handleChange.bind(this, 'windowEndTime')}
+              />
+              <this.FieldGroup
+                id="formControlsNotificationTime"
+                type="text"
+                label="Notification time"
+                placeholder="(eg. 13:00:00)"
+                value={this.state.notificationTime}
+                onChange={this.handleChange.bind(this, 'notificationTime')}
+              />
+              <this.FieldGroup
+                id="formControlsRoute"
+                type="text"
+                label="Route"
+                placeholder="(eg. Oral)"
+                value={this.state.route}
+                onChange={this.handleChange.bind(this, 'route')}
+              />
+              <Button type="submit" bsStyle="primary" bsSize="large">
+                Submit
+              </Button>
+            </form>
+            <br />
+            { this.state.showDelete ? <Button bsStyle="danger" onClick={this.deleteDosage.bind(this)}>Delete Dosage</Button> : null }
+          </Panel>
         </SpacingDiv>
       </div>
     );
@@ -183,7 +186,7 @@ export default Relay.createContainer(EditDosage, {
         id,
         ${Header.getFragment('user')},
         ${DeleteDosageMutation.getFragment('user')},
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,

@@ -11,15 +11,18 @@ import {
   } from 'react-bootstrap/lib/';
 
 import LoginMutation from '../mutations/LoginMutation';
+import SignedOutHeader from './SignedOutHeader';
+import Panel from 'react-bootstrap/lib/Panel';
 
 // Styles for this component
-const Header = styled.div`
-  text-align: center;
-  margin: 10px;
+const SpacingDiv = styled.div`
+  padding: 50px 25%;
 `;
 
-const SpacingDiv = styled.div`
-  margin: 20px;
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 20px;
 `;
 
 class Login extends React.Component {
@@ -75,15 +78,16 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <Header>
-        <h1>Medication Adherence Tracker</h1>
-        Login
-        <br />
-        <Link to="/signup">Don't have an account? Sign up here!</Link>
-        </Header>
+        <SignedOutHeader></SignedOutHeader>
+
+        <ButtonWrapper>
+          <Link to="/signup"><Button>Don't have an account? Sign up here!</Button></Link>
+        </ButtonWrapper>
 
         <SpacingDiv>
-          <form onSubmit={this.handleSubmit.bind(this)}>
+          <Panel header="Login" bsStyle="primary">
+          
+            <form onSubmit={this.handleSubmit.bind(this)}>
               <this.FieldGroup
                 id="formControlsEmail"
                 type="email"
@@ -100,11 +104,14 @@ class Login extends React.Component {
                 value={this.state.password}
                 onChange={this.handleChange.bind(this, 'password')}
               />
+
               <Button type="submit">
                 Submit
               </Button>
-            </form>
-          </SpacingDiv>
+             </form>
+            
+           </Panel>
+         </SpacingDiv>
       </div>
     );
   }

@@ -5,17 +5,18 @@ import styled from 'styled-components';
 import Link from 'react-router/lib/Link';
 import Button from 'react-bootstrap/lib/Button';
 import Header from './Header';
+import Panel from 'react-bootstrap/lib/Panel';
 
 // Styles for this component
-const MedicationDiv = styled.div`
-  text-align: center;
-  margin: 10px;
+const SpacedDiv = styled.div`
+  margin: 2%;
+  display: inline-block;
+  width: 46%;
+  vertical-align: top;
+  height: 100%;
 `;
 
-const DosageDiv = styled.div`
-  text-align: center;
-  margin: 10px;
-`;
+const buttonStyles = { margin: '0 auto 10px' };
 
 class Medication extends React.Component {
   render() {
@@ -25,31 +26,40 @@ class Medication extends React.Component {
       <div>
         <Header user={user} />
 
-        <MedicationDiv>
-          <h3>{medication.name}</h3>
-          Start: {medication.start}
-          <br />
-          End: {medication.end}
-          <br />
-          Repeats: {medication.repeating}
-          <br />
-          Notes: {medication.notes}
-          <br />
-          <Link to={`/editMedication/${medication.id}`}>Edit Medication</Link>
-        </MedicationDiv>
-        <DosageDiv>
-          <h3>Dosages</h3>
-          {medication.dosages.edges.map(edge =>
-            <div key={edge.node.id}>
-              <Link to={`/medication/${medication.id}/editDosage/${edge.node.id}`}>{edge.node.dosageAmount} Notificaion Time = {edge.node.notificationTime}</Link>
-              <br />
-            </div>
-          )}
-          <br />
-          <Link to={`/medication/${medication.id}/editDosage/null`}>
-            <Button bsStyle="primary" bsSize="large" block>Add new dosage</Button>
-          </Link>
-        </DosageDiv>
+        <SpacedDiv>
+          <Panel header={medication.name} bsStyle="primary">
+            <b>Start:</b> {medication.start}
+            <br />
+            <b>End:</b> {medication.end}
+            <br />
+            <b>Repeats:</b> {medication.repeating}
+            <br />
+            <b>Notes:</b> {medication.notes}
+            <br />
+            <br />
+            <Link to={`/editMedication/${medication.id}`}>
+              <Button bsStyle="primary">Edit Medication</Button>
+            </Link>
+          </Panel>
+        </SpacedDiv>
+
+        <SpacedDiv>
+          <Panel header="Dosages" bsStyle="primary">
+            {medication.dosages.edges.map(edge =>
+              <div key={edge.node.id}>
+                <Link to={`/medication/${medication.id}/editDosage/${edge.node.id}`}>
+                  <Button block style={buttonStyles}>
+                    {edge.node.dosageAmount} Notificaion Time = {edge.node.notificationTime}
+                  </Button>
+                </Link>
+              </div>
+            )}
+            <br />
+            <Link to={`/medication/${medication.id}/editDosage/null`}>
+              <Button bsStyle="primary">Add new dosage</Button>
+            </Link>
+          </Panel>
+        </SpacedDiv>
       </div>
     );
   }
@@ -61,7 +71,7 @@ export default Relay.createContainer(Medication, {
       fragment on User {
         ${Header.getFragment('user')},
         id,
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,
@@ -70,7 +80,7 @@ export default Relay.createContainer(Medication, {
               end,
               repeating,
               notes,
-              dosages(first: 20) {
+              dosages(first: 10) {
                 edges {
                   node {
                     id,

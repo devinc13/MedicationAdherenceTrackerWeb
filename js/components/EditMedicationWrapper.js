@@ -24,7 +24,7 @@ export default Relay.createContainer(EditMedicationWrapper, {
       fragment on User {
         id,
         ${EditMedication.getFragment('user')}
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,

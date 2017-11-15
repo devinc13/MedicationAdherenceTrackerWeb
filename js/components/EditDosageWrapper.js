@@ -26,12 +26,12 @@ export default Relay.createContainer(EditDosageWrapper, {
       fragment on User {
         id,
         ${EditDosage.getFragment('user')}
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,
               ${EditDosage.getFragment('medication')}
-              dosages(first: 20) {
+              dosages(first: 10) {
                 edges {
                   node {
                     id,

@@ -3,6 +3,8 @@ import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
 import Link from 'react-router/lib/Link';
+import SignedOutHeader from './SignedOutHeader';
+import Panel from 'react-bootstrap/lib/Panel';
 
 import AddUserMutation from '../mutations/AddUserMutation';
 
@@ -20,7 +22,13 @@ const Header = styled.div`
 `;
 
 const SpacingDiv = styled.div`
-  margin: 20px;
+  padding: 50px 25%;
+`;
+
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 20px;
 `;
 
 class Signup extends React.Component {
@@ -126,64 +134,65 @@ class Signup extends React.Component {
   render() {
     return (
       <div>
-        <Header>
-        <h1>Medication Adherence Tracker</h1>
-        Sign up
-        <br />
-        <Link to="/login">Already have an account? Login here!</Link>
-        </Header>
+        <SignedOutHeader></SignedOutHeader>
+
+        <ButtonWrapper>
+          <Link to="/login"><Button>Already have an account? Login here!</Button></Link>
+        </ButtonWrapper>
 
         <SpacingDiv>
-          <form onSubmit={this.handleSubmit.bind(this)}>
-              <this.FieldGroup
-                id="formControlsFirstName"
-                type="text"
-                label="First Name"
-                placeholder=""
-                getValidationState={this.noValidation.bind(this)}
-                value={this.state.firstName}
-                onChange={this.handleChange.bind(this, 'firstName')}
-              />
-              <this.FieldGroup
-                id="formControlsLastName"
-                type="text"
-                label="Last Name"
-                placeholder=""
-                getValidationState={this.noValidation.bind(this)}
-                value={this.state.lastName}
-                onChange={this.handleChange.bind(this, 'lastName')}
-              />
-              <this.FieldGroup
-                id="formControlsEmail"
-                type="email"
-                label="Email Address"
-                placeholder=""
-                getValidationState={this.noValidation.bind(this)}
-                value={this.state.email}
-                onChange={this.handleChange.bind(this, 'email')}
-              />
-              <this.FieldGroup
-                id="formControlsPassword"
-                type="password"
-                label="Password"
-                placeholder="Minimum 8 characters"
-                getValidationState={this.password1ValidationState.bind(this)}
-                value={this.state.password}
-                onChange={this.handleChange.bind(this, 'password')}
-              />
-              <this.FieldGroup
-                id="formControlsPassword2"
-                type="password"
-                label="Retype Password"
-                placeholder="Must match above password"
-                getValidationState={this.password2ValidationState.bind(this)}
-                value={this.state.password2}
-                onChange={this.handleChange.bind(this, 'password2')}
-              />
-              <Button type="submit">
-                Submit
-              </Button>
-            </form>
+          <Panel header="Signup" bsStyle="primary">
+            <form onSubmit={this.handleSubmit.bind(this)}>
+                <this.FieldGroup
+                  id="formControlsFirstName"
+                  type="text"
+                  label="First Name"
+                  placeholder=""
+                  getValidationState={this.noValidation.bind(this)}
+                  value={this.state.firstName}
+                  onChange={this.handleChange.bind(this, 'firstName')}
+                />
+                <this.FieldGroup
+                  id="formControlsLastName"
+                  type="text"
+                  label="Last Name"
+                  placeholder=""
+                  getValidationState={this.noValidation.bind(this)}
+                  value={this.state.lastName}
+                  onChange={this.handleChange.bind(this, 'lastName')}
+                />
+                <this.FieldGroup
+                  id="formControlsEmail"
+                  type="email"
+                  label="Email Address"
+                  placeholder=""
+                  getValidationState={this.noValidation.bind(this)}
+                  value={this.state.email}
+                  onChange={this.handleChange.bind(this, 'email')}
+                />
+                <this.FieldGroup
+                  id="formControlsPassword"
+                  type="password"
+                  label="Password"
+                  placeholder="Minimum 8 characters"
+                  getValidationState={this.password1ValidationState.bind(this)}
+                  value={this.state.password}
+                  onChange={this.handleChange.bind(this, 'password')}
+                />
+                <this.FieldGroup
+                  id="formControlsPassword2"
+                  type="password"
+                  label="Retype Password"
+                  placeholder="Must match above password"
+                  getValidationState={this.password2ValidationState.bind(this)}
+                  value={this.state.password2}
+                  onChange={this.handleChange.bind(this, 'password2')}
+                />
+                <Button type="submit">
+                  Submit
+                </Button>
+              </form>
+            </Panel>
           </SpacingDiv>
       </div>
     );

@@ -275,7 +275,7 @@ export default Relay.createContainer(Graph, {
     user: () => Relay.QL`
       fragment on User {
         id,
-        medications(first: 20) {
+        medications(first: 10) {
           edges {
             node {
               id,
@@ -284,14 +284,14 @@ export default Relay.createContainer(Graph, {
               end,
               repeating,
               notes,
-              dosages(first: 20) {
+              dosages(first: 10) {
                 edges {
                   node {
                     id,
                     dosageAmount,
                     windowStartTime,
                     windowEndTime,
-                    dosageAdherences(first: 20, startTimestamp: $startTimestamp, endTimestamp: $endTimestamp) {
+                    dosageAdherences(first: 40, startTimestamp: $startTimestamp, endTimestamp: $endTimestamp) {
                       edges {
                         node {
                           id,
