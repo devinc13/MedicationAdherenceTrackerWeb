@@ -213,7 +213,7 @@ var login = function(email, password) {
       let user = new User();
 
       let response = res.rows;
-      if (response == []) {
+      if (!response[0]) {
         // No user found, return blank user
         return user;
       } else {
