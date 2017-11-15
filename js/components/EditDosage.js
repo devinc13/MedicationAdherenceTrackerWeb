@@ -2,13 +2,14 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
-import Panel from 'react-bootstrap/lib/Panel';
 import {
   FormGroup,
   ControlLabel,
   FormControl,
   HelpBlock,
-  Button
+  Button,
+  Modal,
+  Panel
   } from 'react-bootstrap/lib/';
 
  import AddDosageMutation from '../mutations/AddDosageMutation';
@@ -33,7 +34,17 @@ class EditDosage extends React.Component {
       route: "",
       medicationId: "",
       showDelete: false,
+      showError: false,
+      errorMessage: "",
     };
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
   }
 
   handleSubmit(e) {
@@ -41,13 +52,12 @@ class EditDosage extends React.Component {
     const { medication, dosage } = this.props;
 
     let mutation;
-    let failureMessage = "";
 
     if (!dosage) {
-      failureMessage = "Error adding dosage";
+      this.setState({ errorMessage: "Error adding dosage. Please check your input." });
       mutation = new AddDosageMutation(this.state);
     } else {
-      failureMessage = "Error editing dosage"
+      this.setState({ errorMessage: "Error editing dosage. Please check your input." });
       mutation = new EditDosageMutation(this.state);
     }
     
@@ -56,8 +66,7 @@ class EditDosage extends React.Component {
     };
 
     const onFailure = (transaction) => {
-      console.log(transaction.getError().source);
-      window.alert(failureMessage);
+      this.open();
     };
 
     this.props.relay.commitUpdate(
@@ -79,8 +88,8 @@ class EditDosage extends React.Component {
     };
 
     const onFailure = (transaction) => {
-      console.log(transaction.getError().source);
-      window.alert("Error deleting dosage");
+      this.setState({ errorMessage: "Error deleting dosage." });
+      this.open();
     };
 
     let mutation = new DeleteDosageMutation({ user, medication, dosage });
@@ -123,6 +132,19 @@ class EditDosage extends React.Component {
     return (
       <div>
         <Header user={user} />
+
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>{this.state.errorMessage}</h4>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+
         <SpacingDiv>
           <Panel header="Dosage" bsStyle="primary">
             <form onSubmit={this.handleSubmit.bind(this)}>

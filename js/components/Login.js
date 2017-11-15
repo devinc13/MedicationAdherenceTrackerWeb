@@ -7,12 +7,13 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Panel,
+  Modal
   } from 'react-bootstrap/lib/';
 
 import LoginMutation from '../mutations/LoginMutation';
 import SignedOutHeader from './SignedOutHeader';
-import Panel from 'react-bootstrap/lib/Panel';
 
 // Styles for this component
 const SpacingDiv = styled.div`
@@ -31,7 +32,17 @@ class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
+      showError: false,
+      errorMessage: "",
     };
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
   }
 
   handleSubmit(e) {
@@ -42,17 +53,17 @@ class Login extends React.Component {
     const onSuccess = (response) => {
       let token = response.login.token;
       if (!token) {
-        window.alert("No user found with that email and password.");
+        this.setState({ errorMessage: "No user found with that email and password." });
+        this.open();
       } else {
-        console.log("SUCCESS! Token = " + token);
         localStorage.setItem('adherence_tracker_jwt_token', token);
         window.location.href = "/";
       }
     };
 
     const onFailure = (transaction) => {
-      window.alert("Error logging in, please try again later.");
-      console.log(transaction.getError().message);
+      this.setState({ errorMessage: "Error logging in, please try again later." });
+      this.open();
     };
 
     this.props.relay.commitUpdate(
@@ -83,6 +94,18 @@ class Login extends React.Component {
         <ButtonWrapper>
           <Link to="/signup"><Button>Don't have an account? Sign up here!</Button></Link>
         </ButtonWrapper>
+
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>{this.state.errorMessage}</h4>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
         <SpacingDiv>
           <Panel header="Login" bsStyle="primary">

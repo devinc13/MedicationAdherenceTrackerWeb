@@ -2,12 +2,13 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 
 import styled from 'styled-components';
-import Panel from 'react-bootstrap/lib/Panel';
 import {
   FormGroup,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Modal,
+  Panel
   } from 'react-bootstrap/lib/';
 
 import AddMedicationMutation from '../mutations/AddMedicationMutation';
@@ -34,7 +35,17 @@ class EditMedication extends React.Component {
       repeating: "daily",
       notes: "",
       showDelete: false,
+      showError: false,
+      errorMessage: "",
     };
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
   }
 
   handleSubmit(e) {
@@ -43,15 +54,14 @@ class EditMedication extends React.Component {
 
     this.state.userId = user.id;
     let mutation;
-    let failureMessage = "";
     let successLocation = "";
 
     if (!medication) {
-      failureMessage = "Error adding medication";
+      this.setState({ errorMessage: "Error adding medication. Please check your input." });
       mutation = new AddMedicationMutation(this.state);
       successLocation = "/";
     } else {
-      failureMessage = "Error editing medication"
+      this.setState({ errorMessage: "Error editing medication. Please check your input." });
       mutation = new EditMedicationMutation(this.state);
       successLocation = "#/medication/" + medication.id;
     }
@@ -61,8 +71,8 @@ class EditMedication extends React.Component {
     };
 
     const onFailure = (transaction) => {
-      console.log(transaction.getError().source);
-      window.alert(failureMessage);
+      // Show error message
+      this.open();
     };
 
     this.props.relay.commitUpdate(
@@ -85,7 +95,8 @@ class EditMedication extends React.Component {
 
     const onFailure = (transaction) => {
       console.log(transaction.getError().source);
-      window.alert("Error deleting medication");
+      this.setState({ errorMessage: "Error deleting medication." });
+      this.open();
     };
 
     let mutation = new DeleteMedicationMutation({ user, medication });
@@ -127,6 +138,19 @@ class EditMedication extends React.Component {
     return (
       <div>
         <Header user={user} />
+
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>{this.state.errorMessage}</h4>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+
         <SpacingDiv>
           <Panel header="Medication" bsStyle="primary">
             <form onSubmit={this.handleSubmit.bind(this)}>

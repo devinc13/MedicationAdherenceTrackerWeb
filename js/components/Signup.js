@@ -4,7 +4,6 @@ import Relay from 'react-relay/classic';
 import styled from 'styled-components';
 import Link from 'react-router/lib/Link';
 import SignedOutHeader from './SignedOutHeader';
-import Panel from 'react-bootstrap/lib/Panel';
 
 import AddUserMutation from '../mutations/AddUserMutation';
 
@@ -12,7 +11,9 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Modal,
+  Panel
   } from 'react-bootstrap/lib/';
 
 // Styles for this component
@@ -40,7 +41,17 @@ class Signup extends React.Component {
       email: "",
       password: "",
       password2: "",
+      showError: false,
+      errorMessage: "",
     };
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
   }
 
   handleSubmit(e) {
@@ -51,12 +62,14 @@ class Signup extends React.Component {
     let passwordLength = password.length;
 
     if (passwordLength < 8) {
-      window.alert("Password must have a length of at least 8 characters");
+      this.setState({ errorMessage: "Password must have a length of at least 8 characters" });
+      this.open();
       return;
     }
 
     if (password != password2) {
-      window.alert("Passwords must match!");
+      this.setState({ errorMessage: "Passwords must match!" });
+      this.open();
       return;
     }
     
@@ -66,9 +79,11 @@ class Signup extends React.Component {
 
     const onFailure = (transaction) => {
       if (transaction.getError().message.includes("duplicate key value violates unique constraint \"users_email_key\"")) {
-        window.alert("That email is already in use, please login to your existing account or use a different email address.");
+        this.setState({ errorMessage: "That email is already in use, please login to your existing account or use a different email address." });
+        this.open();
       } else {
-        window.alert("Error creating account, please try again later.");
+        this.setState({ errorMessage: "Error creating account, please try again later." });
+        this.open();
       }
     };
 
@@ -139,6 +154,18 @@ class Signup extends React.Component {
         <ButtonWrapper>
           <Link to="/login"><Button>Already have an account? Login here!</Button></Link>
         </ButtonWrapper>
+
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>{this.state.errorMessage}</h4>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
         <SpacingDiv>
           <Panel header="Signup" bsStyle="primary">
