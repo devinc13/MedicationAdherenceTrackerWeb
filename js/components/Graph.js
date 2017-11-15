@@ -48,7 +48,7 @@ const RedCircleDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-  height: 500px;
+  height: 450px;
 `;
 
 const DatePickerDiv = styled.div`

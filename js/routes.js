@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import Medication from './components/Medication';
 import EditMedicationWrapper from './components/EditMedicationWrapper';
 import EditDosageWrapper from './components/EditDosageWrapper';
+import GraphWrapper from './components/GraphWrapper';
 import Route from 'react-router/lib/Route';
 import UserQueries from './queries/UserQueries';
 import MedicationQueries from './queries/MedicationQueries';
@@ -28,6 +29,12 @@ export default (
 		<Route
 			path="/"
 			component={App}
+			queries={UserQueries}
+			render={checkForErrors}
+		/>
+		<Route
+			path="/adherence"
+			component={GraphWrapper}
 			queries={UserQueries}
 			render={checkForErrors}
 		/>

@@ -4,7 +4,7 @@ import Relay from 'react-relay/classic';
 import MedicationList from './MedicationList';
 import Graph from './Graph';
 import Header from './Header';
-
+import Button from 'react-bootstrap/lib/Button';
 import Panel from 'react-bootstrap/lib/Panel';
 import styled from 'styled-components';
 
@@ -32,6 +32,7 @@ class App extends React.Component {
           <Panel header={'Weekly Adherence:'} bsStyle="primary">
             <HeightDiv>
               <Graph user={user} />
+              <Button href="#/adherence" bsStyle="primary" bsSize="large" block>View Full Page</Button>
             </HeightDiv>
           </Panel>
         </SpacedDiv>
