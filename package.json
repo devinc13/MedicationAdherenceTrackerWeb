@@ -6,7 +6,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "babel-node ./server.js",
-    "update-schema": "babel-node ./scripts/updateSchema.js"
+    "update-schema": "babel-node ./scripts/updateSchema.js",
+    "postinstall": "db-migrate up",
   },
   "dependencies": {
     "babel-core": "^6.14.0",
