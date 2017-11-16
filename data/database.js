@@ -1,5 +1,4 @@
 const { Pool, Client } = require('pg');
-const pool = new Pool();
 const dateFormat = require('dateformat');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
@@ -8,6 +7,12 @@ class User {}
 class Medication {}
 class Dosage {}
 class Adherence {}
+
+const connectionString = process.env.DATABASE_URL;
+
+const pool = new Pool({
+  connectionString: connectionString,
+})
 
 var getUserByEmail = function(email) {
   return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => {
