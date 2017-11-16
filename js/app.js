@@ -31,7 +31,7 @@ ReactDOM.render(
 var token = localStorage.getItem('adherence_tracker_jwt_token');
 
 Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer('https://localhost:' + window.location.port + '/graphql', {
+  new Relay.DefaultNetworkLayer('https://localhost/graphql', {
     headers: {
       Authorization: token
     }
