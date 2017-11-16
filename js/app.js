@@ -10,8 +10,9 @@ import useRelay from 'react-router-relay';
 import applyRouterMiddleware from 'react-router/lib/applyRouterMiddleware';
 import useRouterHistory from 'react-router/lib/useRouterHistory';
 import createHashHistory from 'history/lib/createHashHistory';
-import APP_PORT from '../server';
+
 const history = useRouterHistory(createHashHistory)({ queryKey: false });
+const APP_PORT = process.env.PORT || 3000;
 
 ReactDOM.render(
   <Router
