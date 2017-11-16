@@ -12,7 +12,7 @@ import useRouterHistory from 'react-router/lib/useRouterHistory';
 import createHashHistory from 'history/lib/createHashHistory';
 
 const history = useRouterHistory(createHashHistory)({ queryKey: false });
-const APP_PORT = location.port;
+const APP_PORT = window.location.port;
 console.log("**************** APP PORT *********** = " + APP_PORT);
 ReactDOM.render(
   <Router
@@ -27,7 +27,7 @@ ReactDOM.render(
 var token = localStorage.getItem('adherence_tracker_jwt_token');
 
 Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer('https://localhost:' + location.port + '/graphql', {
+  new Relay.DefaultNetworkLayer('https://localhost:' + window.location.port + '/graphql', {
     headers: {
       Authorization: token
     }
