@@ -12,10 +12,7 @@ import useRouterHistory from 'react-router/lib/useRouterHistory';
 import createHashHistory from 'history/lib/createHashHistory';
 
 const history = useRouterHistory(createHashHistory)({ queryKey: false });
-
-console.log(window.location);
 let graphqlLocation = window.location.origin + "/graphql";
-console.log(graphqlLocation);
 
 ReactDOM.render(
   <Router
