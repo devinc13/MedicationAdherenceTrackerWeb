@@ -100,3 +100,5 @@ watcher.on('change', path => {
   );
 });
 startServers();
+
+module.exports = APP_PORT;
