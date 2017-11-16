@@ -12,8 +12,12 @@ import useRouterHistory from 'react-router/lib/useRouterHistory';
 import createHashHistory from 'history/lib/createHashHistory';
 
 const history = useRouterHistory(createHashHistory)({ queryKey: false });
-const APP_PORT = window.location.port;
-console.log("**************** APP PORT *********** = " + APP_PORT);
+
+console.log("**************** APP PORT *********** = ");
+console.log(window.location.port);
+console.log(location.port);
+console.log(window.document.location.port);
+
 ReactDOM.render(
   <Router
     history={history}
