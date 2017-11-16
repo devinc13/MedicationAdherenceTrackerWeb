@@ -2,7 +2,6 @@ import path from 'path';
 import webpack from 'webpack';
 
 const config = {
-  disableHostCheck: true,
   entry: path.resolve(__dirname, 'js', 'app.js'),
   resolve: {
     modules: [
