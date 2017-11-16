@@ -43,3 +43,5 @@ Write you migration using [do-migrate SQP API](https://db-migrate.readthedocs.io
 Run `db-migrate up` to run the migration.
 
 Manually updating adherence info: If the server is running, it will update adherence information on an hourly basis. If you happen to not have the server running, but want to update adherence information for a specific amount of time, run the following (replacing dates as desired): `node manuallyUpdateAdherence.js '2017-11-06 01:00:00' '2017-11-12 23:00:00'`.
+
+Branch `heroku` has some small changes that allow for the app to run on Heroku. If making changes, use `git push heroku heroku:master` to push from the `heroku` branch to Heroku's `master` branch.
