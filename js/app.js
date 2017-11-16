@@ -13,7 +13,7 @@ import createHashHistory from 'history/lib/createHashHistory';
 
 const history = useRouterHistory(createHashHistory)({ queryKey: false });
 const APP_PORT = process.env.PORT || 3000;
-
+console.log("**************** APP PORT *********** = " + APP_PORT);
 ReactDOM.render(
   <Router
     history={history}

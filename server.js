@@ -12,6 +12,7 @@ import {
 } from './scheduledJobs';
 
 const APP_PORT = process.env.PORT || 3000;
+console.log("**************** SERVER PORT *********** = " + APP_PORT);
 const GRAPHQL_PORT = 8080;
 
 let graphQLServer;
@@ -100,5 +101,3 @@ watcher.on('change', path => {
   );
 });
 startServers();
-
-module.exports = APP_PORT;
