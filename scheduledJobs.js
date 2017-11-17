@@ -78,12 +78,15 @@ var updateAdherence = function(from, to) {
 					timestamp = recording.timestamp;
 				}
 
-				pool.query('INSERT INTO dosage_adherences ("adhered", "timestamp", "notes", "dosageid") VALUES ($1, $2, $3, $4)', [adhered, timestamp, notes, dosageid]);
+				pool.query('INSERT INTO dosage_adherences ("adhered", "timestamp", "notes", "dosageid") VALUES ($1, $2, $3, $4)', [adhered, timestamp, notes, dosageid])
+				.then(res => {
+					pool.end();
+				});
 			});
 		}
 	});
 
-	pool.end();
+	
 }
 
 
