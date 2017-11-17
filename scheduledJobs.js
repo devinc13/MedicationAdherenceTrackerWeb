@@ -58,7 +58,7 @@ var updateAdherence = function(from, to) {
 			// Check if there are any recorded dosages during the window for this dosage
 			let formattedWindowStart = dateFormat(from, "yyyy-m-d ") + dosage.windowStartTime;
 			let formattedWindowEnd = dateFormat(from, "yyyy-m-d ") + dosage.windowEndTime;
-			pool.query('SELECT * FROM dosage_recordings WHERE "timestamp" >= $1::timestamp AND "timestamp" <= $2::timestamp', [formattedWindowStart, formattedWindowEnd])
+			pool.query('SELECT * FROM dosage_recordings WHERE dosageid = $1 AND "timestamp" >= $2::timestamp AND "timestamp" <= $3::timestamp', [dosage.id, formattedWindowStart, formattedWindowEnd])
 			.then(res => {
 				// Update adherence table. If we got a dosage_recording, there was adherence. If not, the patient didn't adhere.
 				let recording = res.rows[0];
