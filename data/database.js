@@ -12,7 +12,7 @@ const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
   connectionString: connectionString,
-})
+});
 
 var getUserByEmail = function(email) {
   return pool.query('SELECT * FROM users WHERE email = $1', [email]).then(res => {
