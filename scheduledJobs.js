@@ -1,6 +1,10 @@
 var schedule = require('node-schedule');
 var dateFormat = require('dateformat');
 const { Pool, Client } = require('pg');
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({
+  connectionString: connectionString,
+});
 
 var lastRun = null;
 
@@ -37,11 +41,6 @@ var updateAdherenceWrapper = function() {
 
 // Update adherence table between from and to datetimes
 var updateAdherence = function(from, to) {
-	const connectionString = process.env.DATABASE_URL;
-	let pool = new Pool({
-	  connectionString: connectionString,
-	});
-
 	let formattedStart = dateFormat(from, "yyyy-m-d HH:MM:ss");
 	let formattedEnd = dateFormat(to, "yyyy-m-d HH:MM:ss");
 
@@ -77,10 +76,7 @@ var updateAdherence = function(from, to) {
 					timestamp = recording.timestamp;
 				}
 
-				pool.query('INSERT INTO dosage_adherences ("adhered", "timestamp", "notes", "dosageid") VALUES ($1, $2, $3, $4)', [adhered, timestamp, notes, dosageid])
-				.then(res => {
-					pool.end();
-				});
+				pool.query('INSERT INTO dosage_adherences ("adhered", "timestamp", "notes", "dosageid") VALUES ($1, $2, $3, $4)', [adhered, timestamp, notes, dosageid]);
 			});
 		}
 	});
