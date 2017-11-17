@@ -18,7 +18,8 @@ console.log("Manually updating adherence hourly between " + startDate + " and " 
 while (startDate < endDate) {
 	let oldStartDate = new Date(startDate.getTime());
 	startDate.setHours(startDate.getHours() + 1);
-	scheduledJobs.updateAdherence(oldStartDate, startDate);
+	// Add delay to avoid connection limit on heroku
+	setTimeout(function(from, to) {scheduledJobs.updateAdherence(from, to)}, 1000, oldStartDate, startDate);
 }
 
 console.log("Manual update of adherence done.");
