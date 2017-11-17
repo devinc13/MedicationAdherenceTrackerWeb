@@ -38,8 +38,7 @@ var updateAdherenceWrapper = function() {
 // Update adherence table between from and to datetimes
 var updateAdherence = function(from, to) {
 	const connectionString = process.env.DATABASE_URL;
-
-	const pool = new Pool({
+	let pool = new Pool({
 	  connectionString: connectionString,
 	});
 

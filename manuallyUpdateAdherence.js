@@ -24,7 +24,7 @@ while (startDate < endDate) {
 		let to = new Date(from.getTime());
 		to.setHours(to.getHours() + 1);
 		scheduledJobs.updateAdherence(from, to);
-	}, 1000 * delayFactor, oldStartDate);
+	}, 2000 * delayFactor, oldStartDate);
 	delayFactor = delayFactor + 1;
 }
 
