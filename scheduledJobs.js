@@ -1,7 +1,11 @@
 var schedule = require('node-schedule');
 var dateFormat = require('dateformat');
 const { Pool, Client } = require('pg');
-const pool = new Pool();
+const connectionString = process.env.DATABASE_URL;
+
+const pool = new Pool({
+  connectionString: connectionString,
+});
 
 var lastRun = null;
 
