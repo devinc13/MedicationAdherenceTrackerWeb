@@ -49,7 +49,7 @@ class Medication extends React.Component {
               <div key={edge.node.id}>
                 <Link to={`/medication/${medication.id}/editDosage/${edge.node.id}`}>
                   <Button block style={buttonStyles}>
-                    {edge.node.dosageAmount} Notificaion Time = {edge.node.notificationTime}
+                    {edge.node.dosageAmount} Notification Time = {edge.node.notificationTime}
                   </Button>
                 </Link>
               </div>
