@@ -38,7 +38,7 @@ npm start
 
 To create a db migration run `db-migrate create migrationname` to create a blank migration called migrationname.
 
-Write you migration using [do-migrate SQP API](https://db-migrate.readthedocs.io/en/latest/API/SQL/).
+Write your migration using [do-migrate SQP API](https://db-migrate.readthedocs.io/en/latest/API/SQL/).
 
 Run `db-migrate up` to run the migration.
 
