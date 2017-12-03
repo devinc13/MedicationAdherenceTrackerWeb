@@ -59,9 +59,10 @@ function startGraphQLServer(callback) {
 }
 
 function startScheduledTasks(callback) {
-  hourlyAdherenceJob = hourlyAdherence();
+  //hourlyAdherenceJob = hourlyAdherence();
 
-  console.log("Scheduled tasks started.")
+  //console.log("Scheduled tasks started.")
+  console.log("Skipping scheduled tasks for heroku build.");
 }
 
 function startServers(callback) {
